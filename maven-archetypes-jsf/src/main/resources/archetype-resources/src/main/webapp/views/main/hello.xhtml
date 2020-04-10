@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+
+	<ui:composition template="/WEB-INF/fragments/layout/layout.xhtml">
+		<ui:param name="pageTitle" value="Hello" />
+		<ui:param name="mainNavBarSelected" value="true" />
+
+		<ui:define name="sidemenu">
+			<ui:include src="/WEB-INF/fragments/main/sidemenu.xhtml" />
+		</ui:define>
+
+		<ui:define name="body">
+			<h2>Hello World</h2>
+			Hey #{loginBean.principal.name}, you could place hello information here.
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+
+</html>
