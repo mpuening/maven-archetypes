@@ -6,7 +6,7 @@ This project contains a suite of Maven Archetypes.
 To install these archetypes, run this command:
 
 ```
-maven clean install
+./mvnw clean install
 ```
 
 JSF Application
