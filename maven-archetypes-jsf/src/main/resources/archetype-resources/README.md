@@ -17,7 +17,7 @@ mvn clean package
 To run the application with the Open Liberty Maven Plug-in, run this command:
 
 ```
-mvn liberty:run
+mvn liberty:stop && mvn liberty:run
 ```
 
 The UI will be accessible from this URL:
