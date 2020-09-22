@@ -32,7 +32,7 @@
 
 					<ui:fragment
 						rendered="#{adminNavBarSelected!=null and adminNavBarSelected=='true'}">
-						<h:link outcome="/views/admin/logs"
+						<h:link outcome="/views/admin/events"
 							styleClass="nav-item nav-link active">
 							Admin<span class="sr-only">(current)</span>
 						</h:link>
@@ -40,16 +40,16 @@
 					</ui:fragment>
 					<ui:fragment
 						rendered="#{adminNavBarSelected==null or adminNavBarSelected=='false'}">
-						<h:link outcome="/views/admin/logs" styleClass="nav-item nav-link">
+						<h:link outcome="/views/admin/events" styleClass="nav-item nav-link">
 							Admin
 						</h:link>
 					</ui:fragment>
-					<h:form method="post">
-						<h:commandLink action="#{logoutBean.logout}" value="Sign Out"
-							styleClass="nav-item nav-link" />
-					</h:form>
 				</div>
 			</div>
+			<h:form method="post">
+				<h:commandLink action="#{logoutBean.logout}" value="Sign Out"
+					styleClass="nav-item nav-link" />
+			</h:form>
 		</nav>
 
 	</ui:composition>

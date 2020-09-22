@@ -5,6 +5,42 @@
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
    http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
 
+	<context-param>
+		<param-name>javax.faces.PROJECT_STAGE</param-name>
+		<param-value>Development</param-value>
+	</context-param>
+
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+
+	<session-config>
+		<session-timeout>15</session-timeout>
+	</session-config>
+
+	<welcome-file-list>
+		<welcome-file>/views/main/hello.xhtml</welcome-file>
+	</welcome-file-list>
+
+	<error-page>
+		<error-code>403</error-code>
+		<location>/views/errors/403.xhtml</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/views/errors/404.xhtml</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/views/errors/500.xhtml</location>
+	</error-page>
+
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>JSF Views</web-resource-name>
@@ -44,39 +80,10 @@
 		<role-name>ADMIN</role-name>
 	</security-role>
 
-	<context-param>
-		<param-name>javax.faces.PROJECT_STAGE</param-name>
-		<param-value>Development</param-value>
-	</context-param>
+	<resource-ref>
+		<res-ref-name>jdbc/appDataSource</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
 
-	<servlet>
-		<servlet-name>Faces Servlet</servlet-name>
-		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Faces Servlet</servlet-name>
-		<url-pattern>*.xhtml</url-pattern>
-	</servlet-mapping>
-
-	<session-config>
-		<session-timeout>15</session-timeout>
-	</session-config>
-
-	<welcome-file-list>
-		<welcome-file>/views/main/hello.xhtml</welcome-file>
-	</welcome-file-list>
-
-	<error-page>
-		<error-code>403</error-code>
-		<location>/views/errors/403.xhtml</location>
-	</error-page>
-	<error-page>
-		<error-code>404</error-code>
-		<location>/views/errors/404.xhtml</location>
-	</error-page>
-	<error-page>
-		<error-code>500</error-code>
-		<location>/views/errors/500.xhtml</location>
-	</error-page>
 </web-app>

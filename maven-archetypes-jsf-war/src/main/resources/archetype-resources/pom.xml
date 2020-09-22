@@ -18,6 +18,14 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<bootstrap.version>4.4.1</bootstrap.version>
+		<jquery.version>3.4.1</jquery.version>
+		<derby.version>10.14.2.0</derby.version>
+
+		<repo.dir>${user.home}/.m2/repository</repo.dir>
+		<liberty.var.derbypath>${repo.dir}/org/apache/derby/derby/${derby.version}/derby-${derby.version}.jar</liberty.var.derbypath>
+		<liberty-maven-plugin.version>3.2</liberty-maven-plugin.version>
 	</properties>
 
 	<dependencies>
@@ -28,14 +36,19 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+			<version>${derby.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
-			<version>4.4.1</version>
+			<version>${bootstrap.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery</artifactId>
-			<version>3.4.1</version>
+			<version>${jquery.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -45,7 +58,7 @@
 				<!-- https://github.com/OpenLiberty/ci.maven -->
 				<groupId>io.openliberty.tools</groupId>
 				<artifactId>liberty-maven-plugin</artifactId>
-				<version>3.2</version>
+				<version>${liberty-maven-plugin.version}</version>
 			</plugin>
 		</plugins>
 	</build>

@@ -50,4 +50,5 @@ For gradle users, these are useful commands:
 ```
 gradle build
 gradle libertyRun
+gradle libertyStop
 ```
