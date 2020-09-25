@@ -9,6 +9,23 @@ To install these archetypes, run this command:
 ./mvnw clean install
 ```
 
+SPring Boot Thymeleaf Application
+=================================
+
+To create a simple Spring Boot Thymeleaf application with a login form and a Bootstrap UI and
+support for OAuth2, run this command:
+
+```
+mvn archetype:generate -o \
+    -Darchetype.interactive=false --batch-mode \
+    -DarchetypeGroupId=io.github.mpuening -DarchetypeArtifactId=maven-archetypes-spring-boot-thymeleaf-app -DarchetypeVersion=0.0.1-SNAPSHOT \
+    -DgroupId=org.example.springbootapp -DartifactId=my-spring-boot-app -Dversion=0.0.1-SNAPSHOT
+```
+
+Note: replace the `groupId` and `artifactId` and `version` on the last line of the 
+command as needed.
+
+
 JSF Application
 ===============
 

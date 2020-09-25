@@ -21,6 +21,7 @@
 	</properties>
 
 	<modules>
+		<module>maven-archetypes-spring-boot-thymeleaf-app</module>
 		<module>maven-archetypes-jsf-war</module>
 		<module>maven-archetypes-jaxrs-war</module>
 	</modules>

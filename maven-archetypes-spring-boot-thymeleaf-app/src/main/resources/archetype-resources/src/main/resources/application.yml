@@ -1,0 +1,113 @@
+application:
+  oauth2-login-entry-point: /oauth2/authorization/hydra-openid
+
+spring:
+  profiles:
+    active: local,form-based-security
+  mvc:
+    view:
+      suffix: .html
+  thymeleaf:    cache: false
+
+management:
+  endpoint:
+    health:
+      show-components: when-authorized
+      roles: ADMIN
+
+#logging:
+#  level:
+#    org.thymeleaf: DEBUG
+
+---
+spring:
+  profiles: unittest
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: ''
+    initialization-mode: always
+
+---
+spring:
+  profiles: local
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: ''
+    initialization-mode: always
+  h2:
+    console:
+      enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+---
+spring:
+  profiles: cloud
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: ''
+    initialization-mode: never
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 3
+      connection-timeout: 20000
+      connection-test-query: SELECT 1
+
+---
+hydra:
+  oauth-public-url: http://localhost:4444
+  oauth-private-url: http://localhost:4444
+
+spring:
+  profiles: oauth2-security
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${hydra.oauth-public-url}/
+      client:
+        provider:
+          hydra:
+            authorization-uri: ${hydra.oauth-public-url}/oauth2/auth
+            token-uri: ${hydra.oauth-private-url}/oauth2/token
+            jwk-set-uri: ${hydra.oauth-private-url}/.well-known/jwks.json
+            user-info-uri: ${hydra.oauth-private-url}/userinfo
+            user-name-attribute: sub
+        registration:
+          hydra-openid:
+            provider: hydra
+            client-id: hydra-auth-code-client
+            client-secret: hydra-secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+            - openid
+            - offline
+            - profile.read
+          hydra-code:
+            provider: hydra
+            client-id: hydra-auth-code-client
+            client-secret: hydra-secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+            - offline
+            - profile.read
+          hydra-service:
+            provider: hydra
+            client-id: hydra-service-client
+            client-secret: hydra-secret
+            authorization-grant-type: client_credentials
+            scope:
+            - offline
+            - profile.read

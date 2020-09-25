@@ -1,0 +1,44 @@
+plugins {
+  id 'org.springframework.boot' version '2.3.4.RELEASE'
+  id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+  id 'java'
+}
+
+group = '${groupId}'
+version = '${version}'
+
+sourceCompatibility = '11'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+  implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+  implementation 'com.h2database:h2'
+
+  implementation 'org.springframework.boot:spring-boot-starter-security'
+  implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+  implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+  implementation 'org.springframework.security:spring-security-oauth2-jose'
+  
+  implementation 'org.springframework.boot:spring-boot-starter-actuator'
+  implementation 'org.springframework.boot:spring-boot-starter-validation'
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+  implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+  implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+  implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+  implementation 'org.webjars:bootstrap:4.3.1'
+  implementation 'org.webjars:jquery:3.3.1'
+
+  testImplementation('org.springframework.boot:spring-boot-starter-test') {
+    exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+  }
+  testImplementation 'org.springframework.security:spring-security-test'
+}
+
+test {
+  useJUnitPlatform()
+}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Side Menu</title>
+</head>
+
+<body>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-2">
+				<div th:fragment="sidemenu">
+					<div class="card">
+						<div class="card-header">Links</div>
+						<div class="card-body">
+							<ul class="navbar-nav mr-auto">
+								<li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+								<th:block sec:authorize="hasRole('ADMIN')">
+									<li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
+								</th:block>
+								<li class="nav-item"><a class="nav-link" href="/api/me">Me</a></li>
+								<li class="nav-item"><a class="nav-link" href="/actuator/env">Env</a></li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="card">
+						<div class="card-header">Tools</div>
+						<div class="card-body">
+							<ul class="navbar-nav mr-auto">
+								<li class="nav-item"><a class="nav-link" href="/h2-console">H2
+										Database</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

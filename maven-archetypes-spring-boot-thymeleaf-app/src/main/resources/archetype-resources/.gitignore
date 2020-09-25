@@ -8,7 +8,6 @@ tmp/
 *~.nib
 local.properties
 .settings/
-.sts4-cache/
 .loadpath
 .recommenders
 
