@@ -1,0 +1,12 @@
+/* Application specific CSS styles */
+
+#global-errors {
+}
+
+#global-errors ul {
+	list-style: none;
+	padding-inline-start: 0
+}
+
+#global-errors ul li {
+}
