@@ -21,6 +21,8 @@
 	</properties>
 
 	<modules>
+		<module>maven-archetypes-pom</module>
+		<module>maven-archetypes-empty</module>
 		<module>maven-archetypes-spring-boot-thymeleaf-app</module>
 		<module>maven-archetypes-jsf-war</module>
 		<module>maven-archetypes-jsp-war</module>

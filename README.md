@@ -9,6 +9,36 @@ To install these archetypes, run this command:
 ./mvnw clean install
 ```
 
+POM Project
+===========
+
+To create an POM Project, run this command:
+
+```
+mvn archetype:generate -o \
+    -Darchetype.interactive=false --batch-mode \
+    -DarchetypeGroupId=io.github.mpuening -DarchetypeArtifactId=maven-archetypes-pom -DarchetypeVersion=0.0.1-SNAPSHOT \
+    -DgroupId=org.example.project -DartifactId=my-pom-project -Dversion=0.0.1-SNAPSHOT
+```
+
+Note: replace the `groupId` and `artifactId` and `version` on the last line of the 
+command as needed.
+
+Empty Application
+=================
+
+To create an empty application, run this command:
+
+```
+mvn archetype:generate -o \
+    -Darchetype.interactive=false --batch-mode \
+    -DarchetypeGroupId=io.github.mpuening -DarchetypeArtifactId=maven-archetypes-empty -DarchetypeVersion=0.0.1-SNAPSHOT \
+    -DgroupId=org.example.emptyapp -DartifactId=my-empty-app -Dversion=0.0.1-SNAPSHOT
+```
+
+Note: replace the `groupId` and `artifactId` and `version` on the last line of the 
+command as needed.
+
 Spring Boot Thymeleaf Application
 =================================
 
