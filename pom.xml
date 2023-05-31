@@ -13,11 +13,12 @@
 	<description>Maven Archetypes</description>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<archetype-packaging.version>3.2.1</archetype-packaging.version>
 	</properties>
 
 	<modules>
@@ -35,7 +36,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>3.1.0</version>
+					<version>3.3.1</version>
 					<configuration>
 						<!-- Allow for .gitignore in archetypes -->
 						<addDefaultExcludes>false</addDefaultExcludes>
