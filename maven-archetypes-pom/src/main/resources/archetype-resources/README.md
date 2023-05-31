@@ -16,5 +16,5 @@ mvn clean package
 To add the Maven wrapper to this project, run this command:
 
 ```
-mvn -N io.takari:maven:0.7.7:wrapper
+mvn -N wrapper:wrapper
 ```
