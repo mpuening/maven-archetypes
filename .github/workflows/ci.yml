@@ -23,4 +23,14 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Run Build
         run: mvn -B clean install
+  tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run script file
+      run: |
+         chmod +x ./test-archetypes.sh
+         ./test-archetypes.sh
+      shell: bash
 
