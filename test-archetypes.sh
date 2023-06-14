@@ -6,7 +6,7 @@
 mkdir -p target/archetypes
 cd target/archetypes
 rm -rf my-pom-project
-mvn archetype:generate -o \
+mvn archetype:generate \
     -Darchetype.interactive=false --batch-mode \
     -DarchetypeGroupId=io.github.mpuening \
     -DarchetypeArtifactId=maven-archetypes-pom \
