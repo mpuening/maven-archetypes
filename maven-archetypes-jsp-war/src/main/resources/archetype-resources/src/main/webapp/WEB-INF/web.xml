@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="4.0"
-	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
-   http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
-
-	<session-config>
-		<session-timeout>15</session-timeout>
-	</session-config>
+	xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+	version="5.0">
 
 	<welcome-file-list>
-		<welcome-file>/WEB-INF/views/main/hello.jsp</welcome-file>
+		<welcome-file>hello</welcome-file>
 	</welcome-file-list>
 
 	<error-page>
@@ -25,11 +20,5 @@
 		<error-code>500</error-code>
 		<location>/WEB-INF/views/errors/500.jsp</location>
 	</error-page>
-
-	<resource-ref>
-		<res-ref-name>jdbc/appDataSource</res-ref-name>
-		<res-type>javax.sql.DataSource</res-type>
-		<res-auth>Container</res-auth>
-	</resource-ref>
 
 </web-app>

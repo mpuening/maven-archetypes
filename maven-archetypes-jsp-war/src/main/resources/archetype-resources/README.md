@@ -13,16 +13,25 @@ To build the application, run this command:
 mvn clean package
 ```
 
-To run the application with the Open Liberty Maven Plug-in, run this command:
+To run the application within an application server, run one of these commands:
 
 ```
-mvn liberty:stop && mvn liberty:run
+mvn -P liberty liberty:run
+mvn -P wildfly cargo:run
+mvn -P glassfish cargo:run
+mvn -P tomee tomee:run
 ```
 
 The UI will be accessible from this URL:
 
 ```
-http:localhost:9080/${artifactId}
+http://localhost:8080/${artifactId}
+```
+
+or if Open Liberty
+
+```
+http://localhost:9080/${artifactId} 
 ```
 
 To build a Docker image, run this command:
@@ -35,21 +44,26 @@ To run the Docker image, run this command:
 
 ```
 docker rm -f ${artifactId} || true && docker run -d -p 9080:9080 --name ${artifactId} ${groupId}/${artifactId}
+```
 
+Or on Rancher Desktop:
+
+```
+kubectl run ${artifactId} --image=${groupId}/${artifactId}:latest --image-pull-policy=Never --port=9080
+kubectl port-forward pods/${artifactId} 9080:9080
+
+# To view logs:
+kubectl logs -f ${artifactId}
+
+# To delete:
+kubectl delete pod ${artifactId} 
+docker rmi ${groupId}/${artifactId}:latest
 ```
 
 To add the Maven wrapper to this project, run this command:
 
 ```
-mvn -N io.takari:maven:0.7.7:wrapper
-```
-
-For gradle users, these are useful commands:
-
-```
-gradle build
-gradle libertyRun
-gradle libertyStop
+mvn -N wrapper:wrapper
 ```
 
 Database Information
@@ -58,25 +72,22 @@ Database Information
 If one wants to use the included database in code, it would look like this:
 
 ```
-@javax.annotation.Resource(name="jdbc/appDataSource")
-private javax.sql.DataSource dataSource;
+@Inject
+@AppDataSource
+DataSource dataSource;
 ```
 
 or
 
 ```
-@javax.persistence.PersistenceContext(name = "jdbc/appDataSource")
-private javax.persistence.EntityManager entityManager;
+@PersistenceContext
+EntityManager entityManager;
 ```
 
 If one wants to remove database support, do the following:
 
-* Remove the `library` and `dataSource` elements from both `server.xml` files
-* Remove the `ibm.web.bnd.xml` file
-* Remove the `resource-ref` element from `web.xml`
+* Remove the DataSource and Flyway code from the project
 * Remove the `persistence.xml` file
-* Remove the `derby` properties and dependency from `pom.xml`
-* Remove the `derby` COPY step from Dockerfile
-
-Note: The driver is not listed as provided in `pom.xml` so that the `Dockerfile` has
-a known place from which to copy the driver JAR file into the Docker image.
+* Remove the `library` and `dataSource` elements from both `server.xml` files
+* Remove the `derby` properties and dependencies from `pom.xml`
+* Remove the `derby` COPY steps from Dockerfile

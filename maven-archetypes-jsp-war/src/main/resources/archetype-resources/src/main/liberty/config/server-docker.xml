@@ -2,8 +2,7 @@
 <server description="jsp">
 
 	<featureManager>
-		<feature>localConnector-1.0</feature>
-		<feature>webProfile-8.0</feature>
+		<feature>jakartaee-9.1</feature>
 		<feature>jndi-1.0</feature>
 	</featureManager>
 
@@ -13,18 +12,14 @@
 	<httpEndpoint id="defaultHttpEndpoint"
 		httpPort="${default.http.port}" httpsPort="${default.https.port}" />
 
-	<library id="derby">
+	<library id="global">
 		<file name="/config/derby.jar" />
+		<file name="/config/derbyclient.jar" />
+		<file name="/config/derbytools.jar" />
+		<file name="/config/derbyshared.jar" />
+		<file name="/config/HikariCP.jar" />
+		<file name="/config/slf4j-api.jar" />
+		<file name="/config/my-jsp-app-datasource.jar" />
 	</library>
-
-	<!-- See persistence.xml and web.xml -->
-	<dataSource id="appDataSource"
-		jndiName="jdbc/appDataSource">
-		<jdbcDriver libraryRef="derby" />
-		<connectionManager minPoolSize="1"/>
-		<properties.derby.embedded
-			databaseName="memory:appdb" createDatabase="create" user="dbuser"
-			password="dbpass" />
-	</dataSource>
 
 </server>
