@@ -2,7 +2,9 @@
 <server description="jaxrs">
 
 	<featureManager>
-		<feature>microProfile-1.3</feature>
+		<feature>microProfile-5.0</feature>
+		<feature>jdbc-4.2</feature>
+		<feature>persistence-3.0</feature>
 	</featureManager>
 
 	<variable name="default.http.port" defaultValue="9080" />
@@ -10,5 +12,15 @@
 
 	<httpEndpoint id="defaultHttpEndpoint"
 		httpPort="${default.http.port}" httpsPort="${default.https.port}" />
+
+	<library id="global">
+		<file name="/config/derby.jar" />
+		<file name="/config/derbyclient.jar" />
+		<file name="/config/derbytools.jar" />
+		<file name="/config/derbyshared.jar" />
+		<file name="/config/HikariCP.jar" />
+		<file name="/config/slf4j-api.jar" />
+		<file name="/config/my-jsp-app-datasource.jar" />
+	</library>
 
 </server>

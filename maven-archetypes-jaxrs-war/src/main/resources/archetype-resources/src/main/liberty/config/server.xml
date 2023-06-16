@@ -2,17 +2,25 @@
 <server description="jaxrs">
 
 	<featureManager>
-		<feature>microProfile-1.3</feature>
+		<feature>microProfile-5.0</feature>
+		<feature>jdbc-4.2</feature>
+		<feature>persistence-3.0</feature>
 	</featureManager>
 
 	<variable name="default.http.port" defaultValue="9080" />
 	<variable name="default.https.port" defaultValue="9443" />
-	<variable name="app.name" defaultValue="${artifactId}" />
-	<variable name="app.version" defaultValue="${version}" />
 
 	<httpEndpoint id="defaultHttpEndpoint"
 		httpPort="${default.http.port}" httpsPort="${default.https.port}" />
 
-	<webApplication id="${app.name}"
-		location="${app.name}-${app.version}.war" contextRoot="/${artifactId}" />
+	<library id="global">
+		<file name="${derbypath}" />
+		<file name="${derbyclientpath}" />
+		<file name="${derbytoolspath}" />
+		<file name="${derbysharedpath}" />
+		<file name="${hikaricp}" />
+		<file name="${slf4j}" />
+		<file name="${datasourceutil}" />
+	</library>
+
 </server>

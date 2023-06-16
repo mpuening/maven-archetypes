@@ -65,6 +65,9 @@ else
     exit 1
 fi
 
+# Go back up
+cd ../../..
+
 #
 # JSP Project
 #
@@ -95,5 +98,42 @@ else
     echo "JSP Project failed to build..."
     exit 1
 fi
+
+# Go back up
+cd ../../..
+
+#
+# JAX-RS Project
+#
+mkdir -p target/archetypes
+cd target/archetypes
+rm -rf my-jaxrs-project
+mvn archetype:generate \
+    -Darchetype.interactive=false --batch-mode \
+    -DarchetypeGroupId=io.github.mpuening \
+    -DarchetypeArtifactId=maven-archetypes-jaxrs-war \
+    -DarchetypeVersion=0.0.1-SNAPSHOT \
+    -DgroupId=org.example.project \
+    -DartifactId=my-jaxrs-project \
+    -Dversion=0.0.1-SNAPSHOT
+
+if [ $? -eq 0 ]; then
+    echo "JAX-RS Project created..."
+else
+    echo "JAX-RS Project failed to create..."
+    exit 1
+fi
+
+cd my-jaxrs-project
+mvn clean package
+if [ $? -eq 0 ]; then
+    echo "JAX-RS Project built properly..."
+else
+    echo "JAX-RS Project failed to build..."
+    exit 1
+fi
+
+# Go back up
+cd ../../..
 
 exit 0
