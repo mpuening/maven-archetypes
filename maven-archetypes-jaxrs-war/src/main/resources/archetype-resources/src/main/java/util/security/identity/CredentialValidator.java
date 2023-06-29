@@ -1,4 +1,4 @@
-package ${groupId}.util.security;
+package ${groupId}.util.security.identity;
 
 import jakarta.security.enterprise.credential.Credential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;

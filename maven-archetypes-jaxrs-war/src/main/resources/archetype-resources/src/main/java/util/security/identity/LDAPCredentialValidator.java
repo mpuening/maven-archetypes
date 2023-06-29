@@ -1,4 +1,4 @@
-package ${groupId}.util.security;
+package ${groupId}.util.security.identity;
 
 import java.util.Collections;
 import java.util.Hashtable;
@@ -20,7 +20,7 @@ import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
 
 /**
- * Credential validator
+ * LDAP Credential validator 
  */
 public class LDAPCredentialValidator implements CredentialValidator {
 

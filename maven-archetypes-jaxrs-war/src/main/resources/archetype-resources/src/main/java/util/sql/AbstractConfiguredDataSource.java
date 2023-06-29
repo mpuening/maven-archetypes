@@ -23,6 +23,8 @@ import com.zaxxer.hikari.HikariDataSource;
  * easy to add.
  *
  * See the DataSourceConfiguration class for usage.
+ *
+ * QUESTIONABLE Does this place a connection pool on top of a connection pool?
  */
 public abstract class AbstractConfiguredDataSource extends HikariDataSource {
 
@@ -59,7 +61,7 @@ public abstract class AbstractConfiguredDataSource extends HikariDataSource {
 	/**
 	 * For GlassFish support, the username may appear as a delimited
 	 * username/password string. GlassFish does not invoke the setPassword setter
-	 * but instead call getConnection(u,p) which is not supported by Hikari.
+	 * but instead calls getConnection(u,p) which is not supported by Hikari.
 	 * Doubling up the username as a username/password pair allows us to check the
 	 * username and password in the getConnection(u,p) method against the configured
 	 * credentials.

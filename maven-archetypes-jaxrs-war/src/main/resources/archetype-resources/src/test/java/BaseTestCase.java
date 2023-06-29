@@ -5,7 +5,7 @@ import java.net.URL;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
-import ${groupId}.util.security.TestCredentialValidator;
+import ${groupId}.util.security.identity.TestCredentialValidator;
 
 public abstract class BaseTestCase {
 

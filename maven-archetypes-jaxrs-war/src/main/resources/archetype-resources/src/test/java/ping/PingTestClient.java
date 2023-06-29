@@ -23,6 +23,10 @@ public interface PingTestClient {
 	@Path("/api/ping")
 	Response ping();
 
+	@GET
+	@Path("/api/me")
+	Response me();
+
 	default String basicAuth() {
 		return "Basic " + Base64.getEncoder().encodeToString("admin:password".getBytes());
 	}

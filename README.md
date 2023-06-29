@@ -25,7 +25,7 @@ mvn archetype:generate \
     -Dversion=0.0.1-SNAPSHOT
 ```
 
-Note: replace the `groupId` and `artifactId` and `version` on the last line of the 
+Note: replace the `groupId` and `artifactId` and `version` on the last lines of the 
 command as needed.
 
 Empty Application
@@ -44,13 +44,13 @@ mvn archetype:generate \
     -Dversion=0.0.1-SNAPSHOT
 ```
 
-Note: replace the `groupId` and `artifactId` and `version` on the last line of the 
+Note: replace the `groupId` and `artifactId` and `version` on the last lines of the 
 command as needed.
 
 JSP Application
 ===============
 
-To create a very simple JSP application with database support that works with Open Liberty, GlassFish, WildFly and TomEE, run this command:
+To create a simple JSP application with database support that works with Open Liberty, GlassFish, WildFly and TomEE, run this command:
 
 ```
 mvn archetype:generate \
@@ -63,7 +63,7 @@ mvn archetype:generate \
     -Dversion=0.0.1-SNAPSHOT
 ```
 
-Note: replace the `groupId` and `artifactId` and `version` on the last line of the 
+Note: replace the `groupId` and `artifactId` and `version` on the last lines of the 
 command as needed.
 
 JSF Application
@@ -83,13 +83,13 @@ mvn archetype:generate \
     -Dversion=0.0.1-SNAPSHOT
 ```
 
-Note: replace the `groupId` and `artifactId` and `version` on the last line of the 
+Note: replace the `groupId` and `artifactId` and `version` on the last lines of the 
 command as needed.
 
 JAX-RS API
 ==========
 
-To create a simple JAX-RS API that works with Open Liberty, run this command:
+To create a simple JAX-RS API application with database support that works with Open Liberty, GlassFish, WildFly and TomEE, run this command:
 
 ```
 mvn archetype:generate \
@@ -102,7 +102,7 @@ mvn archetype:generate \
     -Dversion=0.0.1-SNAPSHOT
 ```
 
-Note: replace the `groupId` and `artifactId` and `version` on the last line of the 
+Note: replace the `groupId` and `artifactId` and `version` on the last lines of the 
 command as needed.
 
 Spring Boot Thymeleaf Application
@@ -122,5 +122,5 @@ mvn archetype:generate \
     -Dversion=0.0.1-SNAPSHOT
 ```
 
-Note: replace the `groupId` and `artifactId` and `version` on the last line of the 
+Note: replace the `groupId` and `artifactId` and `version` on the last lines of the 
 command as needed.

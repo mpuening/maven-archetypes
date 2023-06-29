@@ -3,6 +3,8 @@
 #
 # System Properties
 #
+/system-property=app.greeting:add(value="Hello from WildFly!")
+
 #/system-property=db.driver:add(value="org.apache.derby.jdbc.EmbeddedDriver")
 #/system-property=db.url:add(value="jdbc:derby:memory:appdb;create=true")
 #/system-property=db.user:add(value="APP")

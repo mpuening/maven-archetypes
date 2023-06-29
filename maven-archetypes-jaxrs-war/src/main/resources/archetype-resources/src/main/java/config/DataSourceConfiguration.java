@@ -12,20 +12,17 @@ import jakarta.enterprise.inject.Produces;
 import ${groupId}.util.flyway.FlywayMigration;
 import ${groupId}.util.sql.AppDataSource;
 
+/**
+ * Use micro-profile config properties to connect to database.
+ */
 @DataSourceDefinition(
 		name = "java:app/env/jdbc/appDataSource",
-		className = "${groupId}.util.sql.ELConfiguredDataSource",
-		url = "not empty env.get('DB_URL') ? env.get('DB_URL') : "
-				+ "properties.getOrDefault('db.url', 'jdbc:derby:memory:appdb%3Bcreate=true')",
-		user = "not empty env.get('DB_USERNAME') ? env.get('DB_USERNAME') : "
-				+ "properties.getOrDefault('db.user', 'APP') / "
-				+ "not empty env.get('DB_PASSWORD') ? env.get('DB_PASSWORD') : "
-				+ "properties.getOrDefault('db.password', '')",
-		password = "not empty env.get('DB_PASSWORD') ? env.get('DB_PASSWORD') : "
-				+ "properties.getOrDefault('db.password', '')",
+		className = "${groupId}.util.sql.MPConfiguredDataSource",
+		url = "db.url",
+		user = "db.user/db.password",
+		password = "db.password",
 		properties = {
-				"driverClassName=not empty env.get('DB_DRIVER') ? env.get('DB_DRIVER') : "
-						+ "properties.getOrDefault('db.driver', 'org.apache.derby.jdbc.EmbeddedDriver')"
+				"driverClassName=db.driver"
 		})
 @ApplicationScoped
 public class DataSourceConfiguration {
@@ -39,6 +36,9 @@ public class DataSourceConfiguration {
 		return dataSource;
 	}
 
+	/**
+	 * QUESTIONABLE Should use only for local development
+	 */
 	public void onStart(@Observes @Initialized(ApplicationScoped.class) Object unused) {
 		// It's not good practice to have an app be responsible to run migrations.
 		// But it is quite convenient.

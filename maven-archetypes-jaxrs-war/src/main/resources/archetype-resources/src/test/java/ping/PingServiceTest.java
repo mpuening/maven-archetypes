@@ -58,11 +58,7 @@ public class PingServiceTest extends BaseTestCase {
 		assertNotNull(pingService);
 
 		Response response = pingService.ping();
-		assertEquals(200, response.getStatus());
-		String body = response.getEntity().toString();
-		assertEquals(true, body.contains("greeting=HelloTest"));
-		assertEquals(true, body.contains("dataSource=true"));
-		assertEquals(true, body.contains("entityManager=true"));
+		assertPingResponse(response.getStatus(), response.readEntity(Object.class).toString());
 	}
 
 	@Test
@@ -70,11 +66,7 @@ public class PingServiceTest extends BaseTestCase {
 		assertNotNull(pingTestClient);
 
 		Response response = pingTestClient.ping();
-		assertEquals(200, response.getStatus());
-		with(response.readEntity(String.class))
-				.assertThat("$.greeting", is("HelloTest"))
-				.assertThat("$.dataSource", is(true))
-				.assertThat("$.entityManager", is(true));
+		assertPingResponse(response.getStatus(), response.readEntity(String.class));
 	}
 
 	@Test
@@ -83,16 +75,56 @@ public class PingServiceTest extends BaseTestCase {
 
 		Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(new URL(baseURL, "api/ping").toExternalForm());
+		try (final Response response = target.request()
+				.accept(MediaType.APPLICATION_JSON)
+				.get()) {
+			assertPingResponse(response.getStatus(), response.readEntity(String.class));
+		}
+	}
+
+	protected void assertPingResponse(int status, String json) {
+		assertEquals(200, status);
+		with(json)
+			.assertThat("$.data.greeting", is("HelloTest"))
+			.assertThat("$.data.dataSource", is(true))
+			.assertThat("$.data.entityManager", is(true));
+	}
+
+	@Test
+	public void testMeService() {
+		assertNotNull(pingService);
+
+		Response response = pingService.me();
+		assertMeResponse(response.getStatus(), response.readEntity(Object.class).toString(), "guest", false);
+	}
+
+	@Test
+	public void testMeServiceClient() {
+		assertNotNull(pingTestClient);
+
+		Response response = pingTestClient.me();
+		assertMeResponse(response.getStatus(), response.readEntity(String.class), "admin", true);
+	}
+
+	@Test
+	public void testMeServiceUsingRestEasy() throws MalformedURLException {
+		assertNotNull(baseURL);
+
+		Client client = ClientBuilder.newClient();
+		WebTarget target = client.target(new URL(baseURL, "api/me").toExternalForm());
 		String authorization = "Basic " + Base64.getEncoder().encodeToString("admin:password".getBytes());
 		try (final Response response = target.request()
 				.header("Authorization", authorization)
 				.accept(MediaType.APPLICATION_JSON)
 				.get()) {
-			assertEquals(200, response.getStatus());
-			with(response.readEntity(String.class))
-				.assertThat("$.greeting", is("HelloTest"))
-				.assertThat("$.dataSource", is(true))
-				.assertThat("$.entityManager", is(true));
+			assertMeResponse(response.getStatus(), response.readEntity(String.class), "admin", true);
 		}
+	}
+
+	protected void assertMeResponse(int status, String json, String username, boolean isAdmin) {
+		assertEquals(200, status);
+		with(json)
+				.assertThat("$.data.username", is(username))
+				.assertThat("$.data.admin", is(isAdmin));
 	}
 }

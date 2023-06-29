@@ -6,6 +6,7 @@
 
 	<!-- The purpose for this setting is for WildFly to support @RolesAllowed -->
 	<!-- See https://docs.jboss.org/resteasy/docs/6.2.4.Final/userguide/html/ch43.html -->
+	<!-- QUESTIONABLE -->
 	<context-param>
 		<param-name>resteasy.role.based.security</param-name>
 		<param-value>true</param-value>

@@ -1,4 +1,4 @@
-package ${groupId}.util.security;
+package ${groupId}.util.security.identity;
 
 import java.util.Map;
 import java.util.Set;
@@ -9,7 +9,7 @@ import jakarta.security.enterprise.identitystore.CredentialValidationResult;
 
 /**
  * Simple credential validator used for testing only. A set of hard-coded users
- * and roles are provided as default, but can be overridden.
+ * and roles are provided as default, but can be set from the constructor.
  *
  * This validator is enabled only when TEST_USERS_ALLOWED env variable or
  * test.users.allowed system property is set to true.
