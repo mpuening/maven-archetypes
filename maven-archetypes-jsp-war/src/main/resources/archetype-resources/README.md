@@ -3,6 +3,15 @@ JSP Application
 
 This project is a simple JSP application with an example servlet.
 
+This application was tested against these application servers:
+
+* Open Liberty
+* WildFly
+* GlassFish
+* TomEE
+
+The application includes JPA support with an embedded Derby Database. Flyway is also included as a
+convenient way to create tables and test data.
 
 Building and Running the Application
 ====================================
@@ -13,26 +22,15 @@ To build the application, run this command:
 mvn clean package
 ```
 
-To run the application within an application server, run one of these commands:
+To run the application within an application server, run one of these commands; its UI will
+be available at its corresponding URL:
 
-```
-mvn -P liberty liberty:run
-mvn -P wildfly cargo:run
-mvn -P glassfish cargo:run
-mvn -P tomee tomee:run
-```
-
-The UI will be accessible from this URL:
-
-```
-http://localhost:8080/${artifactId}
-```
-
-or if Open Liberty
-
-```
-http://localhost:9080/${artifactId} 
-```
+| Command | URL |
+| --------------------------- | ----------------------------------- |
+| mvn -P liberty liberty:run  | http://localhost:9080/${artifactId} |
+| mvn -P wildfly cargo:run    | http://localhost:8080/${artifactId} |
+| mvn -P glassfish cargo:run  | http://localhost:8080/${artifactId} |
+| mvn -P tomee tomee:run      | http://localhost:8080/${artifactId} |
 
 To build a Docker image, run this command:
 
@@ -56,7 +54,7 @@ kubectl port-forward pods/${artifactId} 9080:9080
 kubectl logs -f ${artifactId}
 
 # To delete:
-kubectl delete pod ${artifactId} 
+kubectl delete pod ${artifactId}
 docker rmi ${groupId}/${artifactId}:latest
 ```
 

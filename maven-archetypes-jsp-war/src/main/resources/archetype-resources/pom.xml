@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.0</version>
+		<version>3.1.1</version>
 	</parent>
 
 	<properties>
@@ -25,14 +25,14 @@
 
 		<!-- https://github.com/OpenLiberty/ci.maven -->
 		<liberty-maven-plugin.version>3.7.1</liberty-maven-plugin.version>
-		<liberty-runtime.version>23.0.0.1</liberty-runtime.version>
+		<liberty-runtime.version>23.0.0.2</liberty-runtime.version>
 		<liberty.loose-application>true</liberty.loose-application>
 
 		<!-- https://codehaus-cargo.github.io/cargo/Maven+3+Plugin+Reference+Guide.html -->
 		<!-- https://codehaus-cargo.github.io/cargo/Configuration+properties.html -->
 		<cargo-maven-plugin.version>1.10.7</cargo-maven-plugin.version>
 		<cargo-wildfly-runtime>wildfly28x</cargo-wildfly-runtime>
-		<cargo-wildfly-script.dir>${project.basedir}</cargo-wildfly-script.dir>
+		<cargo-wildfly-script.dir>${project.basedir}/src/main/wildfly</cargo-wildfly-script.dir>
 
 		<cargo-glassfish-runtime>glassfish7x</cargo-glassfish-runtime>
 
@@ -58,8 +58,6 @@
 		<arquillian.version>1.7.0.Final</arquillian.version>
 		<arquillian-drone.version>3.0.0-alpha.7</arquillian-drone.version>
 		<arquillian-graphene.version>3.0.0-alpha.3</arquillian-graphene.version>
-		<!-- Fix for faces for test cases -->
-		<jakarta-faces.version>4.0.2</jakarta-faces.version>
 		<!-- Newer versions deprecate and remove code needed by Arquillian -->
 		<selenium.version>4.1.1</selenium.version>
 	</properties>
@@ -68,6 +66,7 @@
 		<dependency>
 			<groupId>jakarta.platform</groupId>
 			<artifactId>jakarta.jakartaee-web-api</artifactId>
+			<version>${jakartaee.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	
@@ -78,6 +77,12 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.dataformat</groupId>
+					<artifactId>jackson-dataformat-toml</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.derby</groupId>
@@ -169,18 +174,6 @@
 			</exclusions>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.tomee</groupId>
-			<artifactId>tomee-security</artifactId>
-			<version>${tomee-runtime.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.myfaces.core</groupId>
-					<artifactId>myfaces-api</artifactId>
-				</exclusion>
-			</exclusions>
-			<scope>test</scope>
-		</dependency>
 		<!-- Myfaces is excluded above because it didn't work. Mojarra does. -->
 		<dependency>
 			<groupId>org.apache.tomee</groupId>
@@ -188,22 +181,10 @@
 			<version>${tomee-runtime.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.glassfish</groupId>
-			<artifactId>jakarta.faces</artifactId>
-			<version>${jakarta-faces.version}</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>jakarta.platform</groupId>
-				<artifactId>jakarta.jakartaee-web-api</artifactId>
-				<version>${jakartaee.version}</version>
-				<scope>provided</scope>
-			</dependency>
 			<dependency>
 				<groupId>org.jboss.arquillian</groupId>
 				<artifactId>arquillian-bom</artifactId>
@@ -291,8 +272,6 @@
 							<container>
 								<containerId>${cargo-glassfish-runtime}</containerId>
 								<systemProperties>
-									<spring.profiles.active>local</spring.profiles.active>
-									<test.users.enabled>true</test.users.enabled>
 								</systemProperties>
 							</container>
 							<configuration>
@@ -321,13 +300,8 @@
 						<configuration>
 							<tomeeVersion>${tomee-runtime.version}</tomeeVersion>
 							<tomeeClassifier>plus</tomeeClassifier>
-							<args>-Dspring.profiles.active=local --add-opens java.base/java.lang=ALL-UNNAMED</args>
+							<args>--add-opens java.base/java.lang=ALL-UNNAMED</args>
 							<systemVariables>
-								<tomee.mp.scan>all</tomee.mp.scan>
-								<!-- TomEE does not use the usual location -->
-								<mp.openapi.servers>/${project.artifactId}</mp.openapi.servers>
-								<openapi.ui.yamlUrl>/${project.artifactId}/openapi</openapi.ui.yamlUrl>
-								<test.users.enabled>true</test.users.enabled>
 							</systemVariables>
 							<context>${project.artifactId}</context>
 						</configuration>
