@@ -3,29 +3,26 @@ package ${groupId}.auth;
 import java.io.IOException;
 import java.security.Principal;
 
-import javax.enterprise.context.RequestScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.security.enterprise.AuthenticationStatus;
-import javax.security.enterprise.SecurityContext;
-import javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
-import javax.security.enterprise.credential.UsernamePasswordCredential;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.security.enterprise.AuthenticationStatus;
+import jakarta.security.enterprise.SecurityContext;
+import jakarta.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
+import jakarta.security.enterprise.credential.Credential;
+import jakarta.security.enterprise.credential.UsernamePasswordCredential;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 @Named
 @RequestScoped
 public class LoginBean {
 	@Inject
 	private SecurityContext securityContext;
-
-	@Inject
-	private ExternalContext externalContext;
 
 	@Inject
 	private FacesContext facesContext;
@@ -55,26 +52,34 @@ public class LoginBean {
 	}
 
 	public void login() throws IOException {
-		AuthenticationStatus status = securityContext.authenticate((HttpServletRequest) externalContext.getRequest(),
-				(HttpServletResponse) externalContext.getResponse(),
-				AuthenticationParameters.withParams().credential(new UsernamePasswordCredential(username, password)));
+		Credential credential = new UsernamePasswordCredential(username, password);
+		AuthenticationStatus status = securityContext
+				.authenticate(
+						getHttpRequestFromFacesContext(), getHttpResponseFromFacesContext(),
+						AuthenticationParameters.withParams().credential(credential));
 		switch (status) {
 		case SEND_CONTINUE:
 			facesContext.responseComplete();
 			break;
 		case SEND_FAILURE:
-			facesContext.addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid username and password", null));
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid username and password", null));
 			break;
 		case SUCCESS:
-			externalContext.redirect(externalContext.getRequestContextPath() + "/");
+			facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath() + "/index.xhtml");
 			break;
 		case NOT_DONE:
 		}
 	}
 
+	protected HttpServletRequest getHttpRequestFromFacesContext() {
+		return (HttpServletRequest) facesContext.getExternalContext().getRequest();
+	}
+
+	protected HttpServletResponse getHttpResponseFromFacesContext() {
+		return (HttpServletResponse) facesContext.getExternalContext().getResponse();
+	}
+
 	public Principal getPrincipal() {
 		return securityContext.getCallerPrincipal();
 	}
-
 }

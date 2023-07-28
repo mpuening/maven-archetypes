@@ -8,7 +8,7 @@
 	<ui:composition>
 
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-			<h:outputLink value="#{request.contextPath}" styleClass="navbar-brand">Jakarta EE JSF</h:outputLink>
+			<h:outputLink value="/index.xhtml" styleClass="navbar-brand">App Name</h:outputLink>
 			<button class="navbar-toggler" type="button" data-toggle="collapse"
 				data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
 				aria-expanded="false" aria-label="Toggle navigation">
@@ -46,6 +46,7 @@
 					</ui:fragment>
 				</div>
 			</div>
+			<h:outputText rendered="#{loginBean.principal != null}" value="Welcome #{loginBean.principal.name}" styleClass="text-white"/>
 			<h:form method="post">
 				<h:commandLink action="#{logoutBean.logout}" value="Sign Out"
 					styleClass="nav-item nav-link" />

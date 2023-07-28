@@ -103,6 +103,40 @@ fi
 cd ../../..
 
 #
+# JSF Project
+#
+mkdir -p target/archetypes
+cd target/archetypes
+rm -rf my-jsf-project
+mvn archetype:generate \
+    -Darchetype.interactive=false --batch-mode \
+    -DarchetypeGroupId=io.github.mpuening \
+    -DarchetypeArtifactId=maven-archetypes-jsf-war \
+    -DarchetypeVersion=0.0.1-SNAPSHOT \
+    -DgroupId=org.example.project \
+    -DartifactId=my-jsf-project \
+    -Dversion=0.0.1-SNAPSHOT
+
+if [ $? -eq 0 ]; then
+    echo "JSF Project created..."
+else
+    echo "JSF Project failed to create..."
+    exit 1
+fi
+
+cd my-jsf-project
+mvn clean package
+if [ $? -eq 0 ]; then
+    echo "JSF Project built properly..."
+else
+    echo "JSF Project failed to build..."
+    exit 1
+fi
+
+# Go back up
+cd ../../..
+
+#
 # JAX-RS Project
 #
 mkdir -p target/archetypes
