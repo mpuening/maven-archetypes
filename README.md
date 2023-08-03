@@ -1,6 +1,8 @@
 Maven Archetypes
 ================
 
+[![Continuous Integration](https://github.com/mpuening/maven-archetypes/actions/workflows/ci.yml/badge.svg)](https://github.com/mpuening/maven-archetypes/actions/workflows/ci.yml)
+
 This project contains a suite of Maven Archetypes.
 
 To install these archetypes, run this command:
