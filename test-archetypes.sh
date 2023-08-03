@@ -170,4 +170,49 @@ fi
 # Go back up
 cd ../../..
 
+
+#
+# Spring Boot Thymeleaf Project
+#
+mkdir -p target/archetypes
+cd target/archetypes
+rm -rf my-thymeleaf-project
+mvn archetype:generate \
+    -Darchetype.interactive=false --batch-mode \
+    -DarchetypeGroupId=io.github.mpuening \
+    -DarchetypeArtifactId=maven-archetypes-spring-boot-thymeleaf-app \
+    -DarchetypeVersion=0.0.1-SNAPSHOT \
+    -DgroupId=org.example.project \
+    -DartifactId=my-thymeleaf-project \
+    -Dversion=0.0.1-SNAPSHOT
+
+if [ $? -eq 0 ]; then
+    echo "Spring Boot Project created..."
+else
+    echo "Spring Boot Project failed to create..."
+    exit 1
+fi
+
+cd my-thymeleaf-project
+mvn clean package
+if [ $? -eq 0 ]; then
+    echo "Spring Boot Project built properly..."
+else
+    echo "Spring Boot Project failed to build..."
+    exit 1
+fi
+if command -v gradle &> /dev/null
+then
+    gradle clean build
+    if [ $? -eq 0 ]; then
+        echo "Spring Boot Project built properly..."
+    else
+        echo "Spring Boot Project failed to build..."
+    fi
+fi
+
+
+# Go back up
+cd ../../..
+
 exit 0

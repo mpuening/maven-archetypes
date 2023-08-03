@@ -1,15 +1,25 @@
 Spring Boot Thymeleaf Application
 =================================
 
-This project is a simple Spring Boot application that includes a login form and a UI styled 
-with Bootstrap. A database is also configured.
+This project is a Spring Boot application that bizarrely combines all the following
+into a single application:
 
-There are two types of security: Form Based and OAuth2. The former is enabled by default.
-Two Spring profiles can be used to enable them: `form-based-security` and `oauth2-security`.
-For form based security, default users are configured in `FormBasedSecurityConfiguration`.
-For OAuth2 security, the `application.yml` file contains the OAuth2 configuration. 
-As is, the configuration is for the ORY Hydra as implemented
-[here](https://github.com/mpuening/learn-hydra-login-and-consent).
+* Thymeleaf Web Application
+* LDAP Server
+* Authorization (OAuth2) Server (binds to LDAP server above)
+* OAuth2 Client (for web application authentication)
+* OAuth2 Resource Server
+
+Of course, a real application would not include all of them, but this application
+is a great starting place for learning all the various components.
+
+The LDAP server has the following people in it that one uses to log into the application:
+
+| Username | Password       |
+| -------- | -------------- |
+| pat      | patspassword   |
+| alice    | alicespassword |
+| bob      | bobspassword   |
 
 
 Building and Running the Application
@@ -49,7 +59,7 @@ docker rm -f ${artifactId} || true && docker run -d -p 8080:8080 --name ${artifa
 To add the Maven wrapper to this project, run this command:
 
 ```
-mvn -N io.takari:maven:0.7.7:wrapper
+mvn -N wrapper:wrapper
 ```
 
 For gradle users, these are useful commands:
@@ -58,4 +68,14 @@ For gradle users, these are useful commands:
 gradle build
 gradle bootRun
 ```
+
+TODO
+====
+
+Here is a list of a few items left to do to improve app:
+
+* OpenAPI Schema Responses (e.g. Data, see JAX-RS project)
+* OpenAPI Operation Status Codes (401 / 403 / Customizer?)
+* Remove stack trace in `ProblemDetail` (e.g. `curl http://localhost:8080/api/blah`)
+* Azure AD + PKCE support
 

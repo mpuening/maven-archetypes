@@ -4,7 +4,7 @@
         https://maven.apache.org/xsd/archetype-descriptor-1.1.0.xsd"
 	xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	name="maven-archetype-spring-boot-app">
+	name="maven-archetype-spring-boot-thymeleaf-app">
 	<fileSets>
 		<fileSet filtered="true" packaged="true" encoding="UTF-8">
 			<directory>src/main/java</directory>
@@ -19,6 +19,7 @@
 				<include>**/*.sql</include>
 				<include>**/*.html</include>
 				<include>**/*.css</include>
+				<include>**/*.ldif</include>
 			</includes>
 		</fileSet>
 		<fileSet filtered="true" packaged="true" encoding="UTF-8">
@@ -32,6 +33,7 @@
 			<directory></directory>
 			<includes>
 				<include>README.md</include>
+				<include>pom.xml</include>
 				<include>*.gradle</include>
 			</includes>
 		</fileSet>

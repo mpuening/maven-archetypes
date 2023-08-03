@@ -1,113 +1,102 @@
-application:
-  oauth2-login-entry-point: /oauth2/authorization/hydra-openid
-
 spring:
-  profiles:
-    active: local,form-based-security
-  mvc:
-    view:
-      suffix: .html
-  thymeleaf:    cache: false
 
-management:
-  endpoint:
-    health:
-      show-components: when-authorized
-      roles: ADMIN
+  thymeleaf:
+    cache: false
 
-#logging:
-#  level:
-#    org.thymeleaf: DEBUG
+  ldap:
+    embedded:
+      base-dn: dc=example,dc=org
+      credential:
+        username: uid=admin
+        password: secret
+      ldif: classpath:people.ldif
+      port: 8389
+      validation:
+        enabled: false
 
----
-spring:
-  profiles: unittest
+  security:
+    oauth2:
+
+      authorizationserver:
+        client:
+          app-client:
+            registration:
+              client-id: app-client
+              client-secret: "{noop}secret1"
+              client-authentication-methods:
+                - client_secret_basic
+                - client_secret_post
+              authorization-grant-types:
+                - authorization_code
+                - refresh_token
+              redirect-uris:
+                - http://localhost:8080/login/oauth2/code/app-client
+                - http://localhost:8080/swagger-ui/oauth2-redirect.html
+              post-logout-redirect-uris:
+                - http://localhost:8080/logged-out
+              scopes:
+                - openid
+                - profile
+            require-authorization-consent: true
+
+      client:
+        provider:
+          spring:
+            #issuer-uri: http://127.0.0.1:8080
+            authorization-uri: http://127.0.0.1:8080/oauth2/authorize
+            token-uri: http://127.0.0.1:8080/oauth2/token
+            jwk-set-uri: http://127.0.0.1:8080/oauth2/jwks
+            
+        registration:
+          app-client:
+            provider: spring
+            client-name: app-client
+            client-id: app-client
+            client-secret: secret1
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8080/login/oauth2/code/{registrationId}
+            scope:
+              - openid
+              - profile
+
+      resourceserver:
+        jwt:
+          #issuer-uri: http://127.0.0.1:8080
+          jwk-set-uri: http://127.0.0.1:8080/oauth2/jwks
+          audiences: app-client
+
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password: ''
-    initialization-mode: always
-
----
-spring:
-  profiles: local
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password: ''
-    initialization-mode: always
+  sql:
+    init:
+      mode: always
   h2:
     console:
       enabled: true
 
+# For debugging purposes
 management:
   endpoints:
     web:
       exposure:
         include: "*"
 
----
-spring:
-  profiles: cloud
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password: ''
-    initialization-mode: never
-    hikari:
-      maximum-pool-size: 20
-      minimum-idle: 3
-      connection-timeout: 20000
-      connection-test-query: SELECT 1
+#logging:
+#  level:
+#    org.springframework.security: trace
 
----
-hydra:
-  oauth-public-url: http://localhost:4444
-  oauth-private-url: http://localhost:4444
+springdoc:
+  swagger-ui:
+    operationsSorter: alpha
 
-spring:
-  profiles: oauth2-security
+# See http://127.0.0.1:8080/.well-known/openid-configuration
+app:
   security:
+    ldap-url: ldap://localhost:8389/dc=example,dc=org
+    end-session-endpoint: http://127.0.0.1:8080/connect/logout
     oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${hydra.oauth-public-url}/
-      client:
-        provider:
-          hydra:
-            authorization-uri: ${hydra.oauth-public-url}/oauth2/auth
-            token-uri: ${hydra.oauth-private-url}/oauth2/token
-            jwk-set-uri: ${hydra.oauth-private-url}/.well-known/jwks.json
-            user-info-uri: ${hydra.oauth-private-url}/userinfo
-            user-name-attribute: sub
-        registration:
-          hydra-openid:
-            provider: hydra
-            client-id: hydra-auth-code-client
-            client-secret: hydra-secret
-            authorization-grant-type: authorization_code
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            scope:
-            - openid
-            - offline
-            - profile.read
-          hydra-code:
-            provider: hydra
-            client-id: hydra-auth-code-client
-            client-secret: hydra-secret
-            authorization-grant-type: authorization_code
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            scope:
-            - offline
-            - profile.read
-          hydra-service:
-            provider: hydra
-            client-id: hydra-service-client
-            client-secret: hydra-secret
-            authorization-grant-type: client_credentials
-            scope:
-            - offline
-            - profile.read
+      authorization-uri: http://127.0.0.1:8080/oauth2/authorize
+      token-uri: http://127.0.0.1:8080/oauth2/token

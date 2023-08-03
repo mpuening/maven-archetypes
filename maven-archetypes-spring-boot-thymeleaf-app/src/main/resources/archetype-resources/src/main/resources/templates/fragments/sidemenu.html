@@ -15,10 +15,12 @@
 						<div class="card-header">Links</div>
 						<div class="card-body">
 							<ul class="navbar-nav mr-auto">
+								<li class="nav-item"><a class="nav-link" href="/oauth2/authorization/app-client">Login</a></li>
 								<li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-								<th:block sec:authorize="hasRole('ADMIN')">
+								<th:block sec:authorize="hasRole('admin')">
 									<li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
 								</th:block>
+								<li class="nav-item"><a class="nav-link" href="/tokens">Tokens</a></li>
 								<li class="nav-item"><a class="nav-link" href="/api/me">Me</a></li>
 								<li class="nav-item"><a class="nav-link" href="/actuator/env">Env</a></li>
 							</ul>
@@ -29,6 +31,8 @@
 						<div class="card-header">Tools</div>
 						<div class="card-body">
 							<ul class="navbar-nav mr-auto">
+								<li class="nav-item"><a class="nav-link"
+									href="/swagger-ui/index.html">Swagger UI</a></li>
 								<li class="nav-item"><a class="nav-link" href="/h2-console">H2
 										Database</a></li>
 							</ul>
