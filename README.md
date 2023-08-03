@@ -31,7 +31,7 @@ command as needed.
 Empty Application
 =================
 
-To create an empty application, run this command:
+To create an empty application with a test case, run this command:
 
 ```
 mvn archetype:generate \
@@ -66,11 +66,16 @@ mvn archetype:generate \
 Note: replace the `groupId` and `artifactId` and `version` on the last lines of the 
 command as needed.
 
+Here is a screen shot of the application.
+
+![alt text](images/JSPApp.png "JSP App Screen Shot")
+
 JSF Application
 ===============
 
-To create a simple JSF application with a login form and a Bootstrap UI that works 
-with Open Liberty, run this command:
+To create a simple JSF application with a login form and a Bootstrap UI, along with
+database support and LDAP support that works with Open Liberty, GlassFish, WildFly
+and TomEE, run this command:
 
 ```
 mvn archetype:generate \
@@ -86,10 +91,15 @@ mvn archetype:generate \
 Note: replace the `groupId` and `artifactId` and `version` on the last lines of the 
 command as needed.
 
+Here is a screen shot of the application.
+
+![alt text](images/JSFApp.png "JSF App Screen Shot")
+
 JAX-RS API
 ==========
 
-To create a simple JAX-RS API application with database support that works with Open Liberty, GlassFish, WildFly and TomEE, run this command:
+To create a simple JAX-RS API application with database support that works with
+Open Liberty, GlassFish, WildFly and TomEE, run this command:
 
 ```
 mvn archetype:generate \
@@ -104,6 +114,10 @@ mvn archetype:generate \
 
 Note: replace the `groupId` and `artifactId` and `version` on the last lines of the 
 command as needed.
+
+Here is a screen shot of the application.
+
+![alt text](images/JAXRSApp.png "JAXRS API Screen Shot")
 
 Spring Boot Thymeleaf Application
 =================================
@@ -124,3 +138,17 @@ mvn archetype:generate \
 
 Note: replace the `groupId` and `artifactId` and `version` on the last lines of the 
 command as needed.
+
+This Spring Boot application bizarrely combines all the following into a single application:
+
+* Thymeleaf Web Application
+* LDAP Server
+* Authorization (OAuth2) Server (binds to LDAP server above)
+* OAuth2 Client (for web application authentication)
+* OAuth2 Resource Server
+
+It can be good for learning purposes.
+
+Here is a screen shot of the application.
+
+![alt text](images/ThymeleafApp.png "Spring Boot Thymeleaf App Screen Shot")
