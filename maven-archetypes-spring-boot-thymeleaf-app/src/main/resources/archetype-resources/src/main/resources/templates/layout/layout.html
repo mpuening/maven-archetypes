@@ -2,19 +2,19 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 
-<head th:replace="fragments/head :: head">
+<head th:replace="~{fragments/head :: head}">
 <title>Layout</title>
 </head>
 
 <body>
-	<div th:replace="fragments/header :: header"></div>
+	<div th:replace="~{fragments/header :: header}"></div>
 
 	<th:block th:if="${disableSideMenu == null || !disableSideMenu}">
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-3">
 					<br />
-					<div th:replace="fragments/sidemenu :: sidemenu"></div>
+					<div th:replace="~{fragments/sidemenu :: sidemenu}"></div>
 				</div>
 				<div class="col-md-9">
 					<br />
@@ -34,6 +34,6 @@
 		</div>
 	</th:block>
 
-	<div th:replace="fragments/footer :: footer"></div>
+	<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
