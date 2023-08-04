@@ -30,7 +30,7 @@ public class OAuth2ClientConfiguration {
 	protected String endSessionEndpoint;
 
 	@Bean
-	@Order(4)
+	@Order(5)
 	public SecurityFilterChain oauth2ClientSecurityFilterChain(HttpSecurity http,
 			ClientRegistrationRepository clientRegistrationRepository) throws Exception {
 		return http
@@ -44,9 +44,17 @@ public class OAuth2ClientConfiguration {
 							.logoutSuccessHandler(logoutSuccessHandler(clientRegistrationRepository))
 				)
 				.authorizeHttpRequests(authorize ->
-						authorize
-							.requestMatchers("/", "/home", "/logged-out").permitAll()
-							.anyRequest().authenticated()
+				authorize
+
+						.requestMatchers("/", "/home", "/logged-out").permitAll()
+
+						.requestMatchers("/webjars/**").permitAll()
+						.requestMatchers("/assets/**").permitAll()
+						.requestMatchers("/css/**").permitAll()
+						.requestMatchers("/swagger-ui/**").permitAll()
+						.requestMatchers("/v3/api-docs/**").permitAll()
+
+						.anyRequest().authenticated()
 				)
 				.build();
 	}
