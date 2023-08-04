@@ -41,26 +41,42 @@ spring:
 
       client:
         provider:
+          azure:
+            authorization-uri: ${azure.login-url}/${azure.tenant}/oauth2/v2.0/authorize
+            token-uri: ${azure.login-url}/${azure.tenant}/oauth2/v2.0/token
+            jwk-set-uri: ${azure.login-url}/${azure.tenant}/discovery/v2.0/keys
           spring:
             #issuer-uri: http://127.0.0.1:8080
             authorization-uri: http://127.0.0.1:8080/oauth2/authorize
             token-uri: http://127.0.0.1:8080/oauth2/token
             jwk-set-uri: http://127.0.0.1:8080/oauth2/jwks
-            
+
         registration:
+#          app-client:
+#            provider: azure
+#            client-name: app-client
+#            client-id: AZURE_CLIENT_ID_GOES_HERE
+#            client-authentication-mode: none
+#            authorization-grant-type: authorization_code
+#            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+#            scope:
+#              - openid
+#              - offline_access
+#              - profile
           app-client:
             provider: spring
             client-name: app-client
             client-id: app-client
             client-secret: secret1
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8080/login/oauth2/code/{registrationId}
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope:
               - openid
               - profile
 
       resourceserver:
         jwt:
+          #jwk-set-uri: ${azure.login-url}/${azure.tenant}/discovery/v2.0/keys
           #issuer-uri: http://127.0.0.1:8080
           jwk-set-uri: http://127.0.0.1:8080/oauth2/jwks
           audiences: app-client
@@ -92,6 +108,11 @@ springdoc:
   swagger-ui:
     operationsSorter: alpha
 
+azure:
+  tenant: TENANT_ID_GOES_HERE
+  login-url: https://login.microsoftonline.com
+  logout-url: https://login.windows.net/${azure.tenant}/oauth2/logout
+  
 # See http://127.0.0.1:8080/.well-known/openid-configuration
 app:
   security:

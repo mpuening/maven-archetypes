@@ -77,5 +77,4 @@ Here is a list of a few items left to do to improve app:
 * OpenAPI Schema Responses (e.g. Data, see JAX-RS project)
 * OpenAPI Operation Status Codes (401 / 403 / Customizer?)
 * Remove stack trace in `ProblemDetail` (e.g. `curl http://localhost:8080/api/blah`)
-* Azure AD + PKCE support
 
