@@ -1,5 +1,7 @@
 package ${groupId}.config;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -56,7 +58,7 @@ public class AuthorizationServerConfiguration {
 				.securityMatcher("/login", "/error")
 				.authorizeHttpRequests(authorize -> 
 						authorize
-							.requestMatchers("/error").permitAll()
+							.requestMatchers(antMatcher("/error")).permitAll()
 							.anyRequest().authenticated()
 				)
 				.formLogin(login -> 

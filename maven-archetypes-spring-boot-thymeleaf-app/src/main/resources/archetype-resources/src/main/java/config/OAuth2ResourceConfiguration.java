@@ -36,7 +36,7 @@ public class OAuth2ResourceConfiguration {
 				)
 				.authorizeHttpRequests(authorize ->
 						authorize
-							.requestMatchers("/api/me").permitAll()
+							.requestMatchers(antMatcher("/api/me")).permitAll()
 							.anyRequest().authenticated()
 				)
 				.build();

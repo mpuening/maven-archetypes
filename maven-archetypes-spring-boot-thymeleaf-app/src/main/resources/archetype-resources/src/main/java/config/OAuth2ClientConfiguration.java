@@ -1,5 +1,7 @@
 package ${groupId}.config;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,19 +56,19 @@ public class OAuth2ClientConfiguration {
 				)
 				.logout(logout ->
 						logout
-							.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+							.logoutRequestMatcher(antMatcher("/logout"))
 							.logoutSuccessHandler(logoutSuccessHandler(clientRegistrationRepository))
 				)
 				.authorizeHttpRequests(authorize ->
 				authorize
 
-						.requestMatchers("/", "/home", "/logged-out").permitAll()
+						.requestMatchers(antMatcher("/"), antMatcher("/home"), antMatcher("/logged-out")).permitAll()
 
-						.requestMatchers("/webjars/**").permitAll()
-						.requestMatchers("/assets/**").permitAll()
-						.requestMatchers("/css/**").permitAll()
-						.requestMatchers("/swagger-ui/**").permitAll()
-						.requestMatchers("/v3/api-docs/**").permitAll()
+						.requestMatchers(antMatcher("/webjars/**")).permitAll()
+						.requestMatchers(antMatcher("/assets/**")).permitAll()
+						.requestMatchers(antMatcher("/css/**")).permitAll()
+						.requestMatchers(antMatcher("/swagger-ui/**")).permitAll()
+						.requestMatchers(antMatcher("/v3/api-docs/**")).permitAll()
 
 						.anyRequest().authenticated()
 				)
