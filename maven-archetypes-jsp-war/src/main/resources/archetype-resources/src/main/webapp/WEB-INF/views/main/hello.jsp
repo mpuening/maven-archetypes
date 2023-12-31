@@ -7,6 +7,6 @@
       <jsp:include page="/WEB-INF/views/layout/header.jsp" /> 
     </jsp:attribute>
 	<jsp:body>
-		<a href="<c:url value="/hello"/>">Say Hello</a>
+		<a id="hello-link" href="<c:url value="/hello"/>">Say Hello</a>
 	</jsp:body>
 </layout:layout>

@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.1</version>
+		<version>3.1.7</version>
 	</parent>
 
 	<properties>
@@ -24,13 +24,13 @@
 		<jakartaee.version>9.1.0</jakartaee.version>
 
 		<!-- https://github.com/OpenLiberty/ci.maven -->
-		<liberty-maven-plugin.version>3.9</liberty-maven-plugin.version>
+		<liberty-maven-plugin.version>3.10</liberty-maven-plugin.version>
 		<liberty-runtime.version>23.0.0.2</liberty-runtime.version>
 		<liberty.loose-application>true</liberty.loose-application>
 
 		<!-- https://codehaus-cargo.github.io/cargo/Maven+3+Plugin+Reference+Guide.html -->
 		<!-- https://codehaus-cargo.github.io/cargo/Configuration+properties.html -->
-		<cargo-maven-plugin.version>1.10.10</cargo-maven-plugin.version>
+		<cargo-maven-plugin.version>1.10.11</cargo-maven-plugin.version>
 
 		<cargo-wildfly-runtime>wildfly28x</cargo-wildfly-runtime>
 		<cargo-wildfly-script.dir>${project.basedir}/src/main/wildfly</cargo-wildfly-script.dir>
@@ -56,11 +56,8 @@
 		<liberty.var.datasourceutil>${project.build.directory}/${project.artifactId}-${project.version}-datasource.jar</liberty.var.datasourceutil>
 
 		<!-- Testing support -->
-		<arquillian.version>1.7.2.Final</arquillian.version>
-		<arquillian-drone.version>3.0.0-alpha.7</arquillian-drone.version>
-		<arquillian-graphene.version>3.0.0-alpha.3</arquillian-graphene.version>
-		<!-- Newer versions deprecate and remove code needed by Arquillian -->
-		<selenium.version>4.1.1</selenium.version>
+		<arquillian.version>1.8.0.Final</arquillian.version>
+		<selenide.version>7.0.4</selenide.version>
 	</properties>
 
 	<dependencies>
@@ -123,24 +120,21 @@
 			<artifactId>junit-jupiter</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.codeborne</groupId>
+			<artifactId>selenide</artifactId>
+			<version>${selenide.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>htmlunit-driver</artifactId>
+		</dependency>
 
 		<!-- Arquillian Container -->
 		<dependency>
 			<groupId>org.jboss.arquillian.junit5</groupId>
 			<artifactId>arquillian-junit5-container</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.graphene</groupId>
-			<artifactId>graphene-webdriver</artifactId>
-			<version>${arquillian-graphene.version}</version>
-			<type>pom</type>
-			<exclusions>
-				<exclusion>
-					<groupId>xerces</groupId>
-					<artifactId>xercesImpl</artifactId>
-				</exclusion>
-			</exclusions>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -190,13 +184,6 @@
 				<groupId>org.jboss.arquillian</groupId>
 				<artifactId>arquillian-bom</artifactId>
 				<version>${arquillian.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.jboss.arquillian.extension</groupId>
-				<artifactId>arquillian-drone-bom</artifactId>
-				<version>${arquillian-drone.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -272,18 +259,7 @@
 						<configuration>
 							<container>
 								<containerId>${cargo-glassfish-runtime}</containerId>
-								<systemProperties>
-								</systemProperties>
 							</container>
-							<configuration>
-								<properties>
-									<cargo.start.jvmargs>
-										--add-opens java.base/java.lang=ALL-UNNAMED
-										--add-opens java.base/java.util=ALL-UNNAMED
-										--add-opens java.base/java.io=ALL-UNNAMED
-									</cargo.start.jvmargs>
-								</properties>
-							</configuration>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -314,22 +290,6 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<!-- TomEE test cases need this module setting -->
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<systemPropertyVariables>
-						<browser>phantomjs</browser>
-					</systemPropertyVariables>
-					<argLine>
-						--add-opens java.base/java.lang=ALL-UNNAMED
-						--add-opens java.base/java.util=ALL-UNNAMED
-						--add-opens java.base/java.io=ALL-UNNAMED
-						--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
-					</argLine>
-				</configuration>
-			</plugin>
 			<plugin>
 				<!-- Liberty wants DataSource classes in app server classpath. See server.xml -->
 				<!-- In a real project, you'll re-factor this into modules. -->
