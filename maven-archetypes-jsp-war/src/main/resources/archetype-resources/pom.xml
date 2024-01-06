@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.7</version>
+		<version>3.2.1</version>
 	</parent>
 
 	<properties>
@@ -277,7 +277,7 @@
 						<configuration>
 							<tomeeVersion>${tomee-runtime.version}</tomeeVersion>
 							<tomeeClassifier>plus</tomeeClassifier>
-							<args>--add-opens java.base/java.lang=ALL-UNNAMED</args>
+							<args>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.rmi/sun.rmi.transport=ALL-UNNAMED</args>
 							<systemVariables>
 							</systemVariables>
 							<context>${project.artifactId}</context>

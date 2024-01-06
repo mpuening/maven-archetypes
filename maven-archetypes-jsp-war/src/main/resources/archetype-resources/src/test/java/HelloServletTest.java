@@ -6,6 +6,7 @@ import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.webdriver;
 import static com.codeborne.selenide.WebDriverConditions.urlStartingWith;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.openqa.selenium.By.id;
 
 import java.net.URL;
 
@@ -16,7 +17,6 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import com.codeborne.selenide.WebDriverRunner;
@@ -56,14 +56,14 @@ public class HelloServletTest {
 		open(baseURL);
 		webdriver().shouldHave(urlStartingWith(baseURL.toString()));
 		// System.out.println(WebDriverRunner.source());
-		$(By.id("header")).shouldHave(text("App Name"));
-		$(By.id("body")).shouldHave(text("Say Hello"));
+		$(id("header")).shouldHave(text("App Name"));
+		$(id("body")).shouldHave(text("Say Hello"));
 		
-		$(By.id("hello-link")).shouldHave(text("Say Hello"));
-		$(By.id("hello-link")).click();
+		$(id("hello-link")).shouldHave(text("Say Hello"));
+		$(id("hello-link")).click();
 
 		webdriver().shouldHave(urlStartingWith(baseURL + "hello"));
-		$(By.id("header")).shouldHave(text("App Name"));
-		$(By.id("body")).shouldHave(text("Say Hello"));
+		$(id("header")).shouldHave(text("App Name"));
+		$(id("body")).shouldHave(text("Say Hello"));
 	}
 }
