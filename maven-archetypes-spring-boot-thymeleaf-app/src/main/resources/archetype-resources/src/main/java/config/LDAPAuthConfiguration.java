@@ -32,8 +32,7 @@ public class LDAPAuthConfiguration {
 		//
 		// This is how we fetch the groups the person is in
 		//
-		DefaultLdapAuthoritiesPopulator groupsPopulator = new DefaultLdapAuthoritiesPopulator(contextSource,
-				"ou=groups");
+		DefaultLdapAuthoritiesPopulator groupsPopulator = new DefaultLdapAuthoritiesPopulator(contextSource, "ou=groups");
 		groupsPopulator.setGroupSearchFilter("(uniqueMember={0})");
 		groupsPopulator.setRolePrefix("GROUP_");
 

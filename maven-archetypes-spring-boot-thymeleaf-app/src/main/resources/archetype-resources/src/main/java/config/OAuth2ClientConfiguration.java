@@ -60,17 +60,17 @@ public class OAuth2ClientConfiguration {
 							.logoutSuccessHandler(logoutSuccessHandler(clientRegistrationRepository))
 				)
 				.authorizeHttpRequests(authorize ->
-				authorize
+						authorize
 
-						.requestMatchers(antMatcher("/"), antMatcher("/home"), antMatcher("/logged-out")).permitAll()
-
-						.requestMatchers(antMatcher("/webjars/**")).permitAll()
-						.requestMatchers(antMatcher("/assets/**")).permitAll()
-						.requestMatchers(antMatcher("/css/**")).permitAll()
-						.requestMatchers(antMatcher("/swagger-ui/**")).permitAll()
-						.requestMatchers(antMatcher("/v3/api-docs/**")).permitAll()
-
-						.anyRequest().authenticated()
+							.requestMatchers(antMatcher("/"), antMatcher("/home"), antMatcher("/logged-out")).permitAll()
+	
+							.requestMatchers(antMatcher("/webjars/**")).permitAll()
+							.requestMatchers(antMatcher("/assets/**")).permitAll()
+							.requestMatchers(antMatcher("/css/**")).permitAll()
+							.requestMatchers(antMatcher("/swagger-ui/**")).permitAll()
+							.requestMatchers(antMatcher("/v3/api-docs/**")).permitAll()
+	
+							.anyRequest().authenticated()
 				)
 				.build();
 	}
