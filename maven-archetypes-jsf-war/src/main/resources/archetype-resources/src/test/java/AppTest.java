@@ -1,16 +1,16 @@
 package ${groupId};
 
-import static org.openqa.selenium.By.className;
-import static org.openqa.selenium.By.id;
-import static org.openqa.selenium.By.partialLinkText;
-import static org.openqa.selenium.By.tagName;
-import static org.openqa.selenium.By.xpath;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.webdriver;
 import static com.codeborne.selenide.WebDriverConditions.urlStartingWith;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.openqa.selenium.By.className;
+import static org.openqa.selenium.By.id;
+import static org.openqa.selenium.By.linkText;
+import static org.openqa.selenium.By.tagName;
+import static org.openqa.selenium.By.xpath;
 
 import java.net.URL;
 
@@ -66,13 +66,6 @@ public class AppTest {
 		assertNotNull(baseURL);
 	}
 
-	/**
-	 * TomEE can show weird behavior where #{loginBean.login} action is invoked
-	 * twice, and I don't know why. Somehow the request thread re-enters the bean
-	 * after pausing on the auth method. You can see this using the app running on
-	 * TomEE (you have to login multiple times). When a request URL is saved though,
-	 * correct behavior occurs. This test case does that.
-	 */
 	@Test
 	@Order(2)
 	public void testLogin() {
@@ -82,12 +75,12 @@ public class AppTest {
 		$(className("navbar-brand")).shouldHave(text("App Name"));
 
 		// Click Sign Out to ensure we are logged out
-		$(partialLinkText("Sign Out")).click();
+		$(linkText("Sign Out")).click();
 		$(tagName("body")).shouldHave(text("You have been logged out"));
 
 		// Open protected page, make sure login page displays. The
 		// request will be saved, and we get around TomEE bug.
-		$(partialLinkText("Sign In")).click();
+		$(linkText("Sign In")).click();
 		$(id("loginMessage")).shouldHave(text("Please sign in..."));
 
 		$(xpath("//input[contains(@id,':username')]")).clear();
@@ -104,7 +97,7 @@ public class AppTest {
 	@Test
 	@Order(3)
 	public void testMainLink() {
-		$(partialLinkText("Main")).click();
+		$(linkText("Main")).click();
 		webdriver().shouldHave(urlStartingWith(baseURL + "views/main/hello.xhtml"));
 		$(tagName("body")).shouldHave(text("Hey alice"));
 	}
@@ -113,7 +106,7 @@ public class AppTest {
 	@Order(4)
 	public void testAdminLink() {
 		// alice does not have access, only admin
-		$(partialLinkText("Admin")).click();
+		$(linkText("Admin")).click();
 		webdriver().shouldHave(urlStartingWith(baseURL + "views/admin/events.xhtml"));
 		$(tagName("body")).shouldHave(text("Access Denied"));
 	}
@@ -121,7 +114,7 @@ public class AppTest {
 	@Test
 	@Order(5)
 	public void testSignOut() {
-		$(partialLinkText("Sign Out")).click();
+		$(linkText("Sign Out")).click();
 		webdriver().shouldHave(urlStartingWith(baseURL + "views/auth/logged-out.xhtml"));
 		$(tagName("body")).shouldHave(text("You have been logged out"));
 

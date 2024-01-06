@@ -128,7 +128,12 @@ If one wants to remove security support, do the following:
 * Remove the security utility code from the project (`util.security` package)
 * Remove the authentication code from project (`auth` package)
 * Remove the security configuration from `web.xml`
-* Remove the `login.xhtml` page
+* Remove the `login.xhtml` and `logged-out.xhtml` page
+
+TomEE can show weird behavior where #{loginBean.login} action is invoked twice, and I don't know why.
+Somehow the request thread re-enters the bean after pausing on the auth method. You can see this
+using the app running on TomEE (you have to login multiple times). When a request URL is saved though,
+correct behavior occurs. The login test case does that.
 
 Test Cases
 ==========
