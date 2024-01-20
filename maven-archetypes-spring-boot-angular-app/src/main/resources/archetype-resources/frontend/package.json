@@ -1,0 +1,21 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "npx tsc && webpack --mode='development'",
+    "BootstrapMods": "node build/BootstrapMods.js",
+    "TailwindCSSMods": "node build/TailwindCSSMods.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+	"@angular/cli": "^17.1.0",
+    "file-loader": "^6.2.0",
+    "ts-morph": "^21.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2"
+  }
+}

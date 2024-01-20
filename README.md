@@ -154,3 +154,38 @@ It can be good for learning purposes.
 Here is a screen shot of the application.
 
 ![alt text](images/ThymeleafApp.png "Spring Boot Thymeleaf App Screen Shot")
+
+Spring Boot Angular Application
+===============================
+
+> [!WARNING]  
+> This project is a work in progress and not yet complete.
+
+To create a simple Spring Boot Angular application with a login form and a Bootstrap UI and
+support for OAuth2, run this command:
+
+```
+mvn archetype:generate \
+    -Darchetype.interactive=false --batch-mode \
+    -DarchetypeGroupId=io.github.mpuening \
+    -DarchetypeArtifactId=maven-archetypes-spring-boot-angular-app \
+    -DarchetypeVersion=0.0.1-SNAPSHOT \
+    -DgroupId=org.example.springbootapp \
+    -DartifactId=my-spring-boot-app \
+    -Dversion=0.0.1-SNAPSHOT
+```
+
+Note: replace the `groupId` and `artifactId` and `version` on the last lines of the 
+command as needed.
+
+This Spring Boot application bizarrely combines all the following into a single application:
+
+* LDAP Server
+* Authorization (OAuth2) Server (binds to LDAP server above)
+* OAuth2 Resource Server
+
+The Angular code contains the OAuth2 client.
+
+It can be good for learning purposes.
+
+
