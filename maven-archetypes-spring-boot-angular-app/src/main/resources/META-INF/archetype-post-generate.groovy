@@ -15,13 +15,17 @@ def angularProjectDir = new File(frontendDir, request.artifactId)
 
 // ==============================================
 
-def spawnProcess(String cmd, File dir) {
+def runProcess(String cmd, File dir) {
     def process = cmd.execute(null, dir)
     process.waitForProcessOutput((Appendable)System.out, System.err)
     if (process.exitValue() != 0) {
         throw new Exception("Command '$cmd' failed with code: ${process.exitValue()}")
     }
 }
+
+def npm = "./node/npm"
+def npx = "./node/npx"
+def ng = "./node/node ./node_modules/@angular/cli/bin/ng.js"
 
 // ==============================================
 println("Renaming $request.artifactId project modules...")
@@ -35,29 +39,62 @@ generatedBackendDir.renameTo(backendDir)
 // ==============================================
 println("Installing node, npm, and ng/cli...")
 
-spawnProcess("mvn package", frontendDir)
+runProcess("mvn package", frontendDir)
 
 // ==============================================
 println("Creating Angular Project...")
 
-def ng = "./node/node ./node_modules/@angular/cli/bin/ng.js"
-
-spawnProcess("$ng new $request.artifactId --package-manager=npm --ssr=false --style=css --routing=true --skip-install=true --skip-git=true", frontendDir)
+runProcess("$ng new $request.artifactId --package-manager=npm --ssr=false --style=css --routing=true --skip-install=true --skip-git=true", frontendDir)
 
 // ==============================================
 //println("Installing Tailwind CSS Support...")
 
 // https://tailwindcss.com/docs/guides/angular
-//spawnProcess("../node/npm install -D tailwindcss postcss autoprefixer", angularProjectDir)
-//spawnProcess("../node/npx tailwindcss init", angularProjectDir)
-//spawnProcess("./node/npm run TailwindCSSMods", frontendDir)
+//runProcess("$npm install -D tailwindcss postcss autoprefixer", angularProjectDir)
+//runProcess("$npx tailwindcss init", angularProjectDir)
+//runProcess("$npm run TailwindCSSMods", frontendDir)
 
 // ==============================================
 println("Installing Bootstrap Support...")
 
-// https://tailwindcss.com/docs/guides/angular
-spawnProcess("../node/npm install bootstrap bootstrap-icons --save", angularProjectDir)
-spawnProcess("./node/npm run BootstrapMods", frontendDir)
+runProcess("../$npm install bootstrap bootstrap-icons --save", angularProjectDir)
+runProcess("$npm run BootstrapMods", frontendDir)
+
+// ==============================================
+
+//
+// https://blog.logrocket.com/angular-modules-best-practices-for-structuring-your-app/
+//
+// Angular project layout conventions..
+// 1) Core: src/app/core
+//    Loaded with the application
+//    Components include:
+//      Auth, layout, error
+// 2) Shared: src/app/shared
+//      Commonly used directives, pipes, components
+//      Imported by both core and features
+//      Services should not be here
+// 3) Features: src/app/features
+//      Models and Components only used here
+//      Pages go here.
+//
+
+// ==============================================
+println("Creating UI Layout...")
+
+runProcess("../$ng generate component --skip-tests=true --selector=app-layout-header core/layout/header", angularProjectDir)
+runProcess("../$ng generate component --skip-tests=true --selector=app-layout-footer core/layout/footer", angularProjectDir)
+runProcess("$npm run LayoutMods", frontendDir)
+
+// Might need properties passed in to indicate which  is active
+
+// ==============================================
+
+// Pages, home page, etc
+
+// ==============================================
+
+// Routing, Auth Guards
 
 // ==============================================
 println("Deleting bootstrapper project...")
