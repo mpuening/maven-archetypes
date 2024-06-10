@@ -86,15 +86,47 @@ runProcess("../$ng generate component --skip-tests=true --selector=app-layout-he
 runProcess("../$ng generate component --skip-tests=true --selector=app-layout-footer core/layout/footer", angularProjectDir)
 runProcess("$npm run LayoutMods", frontendDir)
 
-// Might need properties passed in to indicate which  is active
+// Might need properties passed in to indicate which is active
 
 // ==============================================
+println("Creating UI Pages...")
 
 // Pages, home page, etc
+runProcess("../$ng generate component --skip-tests=true --selector=app-feature-me features/main/me", angularProjectDir)
+runProcess("../$ng generate component --skip-tests=true --selector=app-feature-help features/main/help", angularProjectDir)
+runProcess("../$ng generate component --skip-tests=true --selector=app-feature-main-sidemenu features/main/sidemenu", angularProjectDir)
+runProcess("$npm run MainFeatureMods", frontendDir)
+
+runProcess("../$ng generate component --skip-tests=true --selector=app-feature-events features/admin/events", angularProjectDir)
+runProcess("../$ng generate component --skip-tests=true --selector=app-feature-support features/admin/support", angularProjectDir)
+runProcess("../$ng generate component --skip-tests=true --selector=app-feature-admin-sidemenu features/admin/sidemenu", angularProjectDir)
+runProcess("$npm run AdminFeatureMods", frontendDir)
 
 // ==============================================
 
 // Routing, Auth Guards
+
+runProcess("$npm run RoutingMods", frontendDir)
+
+// ==============================================
+
+// Create Wrapper Scripts
+
+def npmwFile = new File("$frontendDir/npmw")
+npmwFile.createNewFile()
+npmwFile.append("""#!/bin/sh
+
+./node/npm  \$*
+
+""")
+
+def ngwFile = new File("$frontendDir/ngw")
+ngwFile.createNewFile()
+ngwFile.append("""#!/bin/sh
+
+./node/node ./node_modules/@angular/cli/bin/ng.js \$*
+
+""")
 
 // ==============================================
 println("Deleting bootstrapper project...")

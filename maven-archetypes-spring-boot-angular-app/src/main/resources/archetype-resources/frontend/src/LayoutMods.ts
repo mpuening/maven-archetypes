@@ -8,11 +8,66 @@ importHeaderAndFooterInAppComponentFile();
 // Not using this approach. 
 //setBodyClassesInAppComponentFile();
 
+importRouterLinkIntoHeader();
+
 setHeaderComponentHTMLFile();
 setFooterComponentHTMLFile();
 setFooterComponentCSSFile();
 
 setMainAppWithLayoutElements();
+
+//=========================================================
+//
+// Import RouterLink to Header Component
+//
+function importRouterLinkIntoHeader() {
+	const headerComponentFile = "$artifactId/src/app/core/layout/header/header.component.ts";
+	console.log("Updating " + headerComponentFile);
+
+	const project = new Project({
+		tsConfigFilePath: './tsconfig.json',
+		skipAddingFilesFromTsConfig: true,
+	});
+
+	project.addSourceFilesAtPaths(headerComponentFile);
+	project.getSourceFiles().forEach((sourceFile) => {
+		const HeaderComponent = sourceFile.getClass('HeaderComponent');
+		if (HeaderComponent != null) {
+			//
+			// Add import statements
+			//
+			sourceFile.addImportDeclaration({
+				namedImports: ['RouterLink'],
+				moduleSpecifier: '@angular/router'
+			});
+
+			//
+			// Reference RouterLink in @Component.imports
+			//
+			const decorators = HeaderComponent.getDecorators();
+			decorators.forEach(decorator => {
+				if (decorator.getText().startsWith("@Component")) {
+					const args = decorator.getArguments();
+					for (let i = 0; i < args.length; i++) {
+						const config = args[i] as ObjectLiteralExpression;
+						if (config != null) {
+							config.getProperties().forEach(entry => {
+
+								if (entry.getText().includes("imports")) {
+									entry
+										.getFirstChildByKind(SyntaxKind.ArrayLiteralExpression)
+										?.addElement('RouterLink');
+								}
+							});
+						}
+					}
+				}
+			});
+		}
+
+		sourceFile.save();
+	});
+}
 
 //=========================================================
 //
@@ -45,7 +100,7 @@ function importHeaderAndFooterInAppComponentFile() {
 			});
 
 			//
-			// Reference Header and Footer in @Compomnent.imports
+			// Reference Header and Footer in @Component.imports
 			//
 			const decorators = AppComponent.getDecorators();
 			decorators.forEach(decorator => {
@@ -144,7 +199,7 @@ function setHeaderComponentHTMLFile() {
 	const headerComponentFile = "$artifactId/src/app/core/layout/header/header.component.html";
 	const headerComponentContent = `
 <header>
-  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">App Name</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -152,11 +207,11 @@ function setHeaderComponentHTMLFile() {
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link" routerLink="/main">Main</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
+          <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link" routerLink="/admin">Admin</a>
           </li>
         </ul>
         <form class="d-flex" role="logout">
@@ -179,7 +234,8 @@ function setHeaderComponentHTMLFile() {
 function setFooterComponentHTMLFile() {
 	const footerComponentFile = "$artifactId/src/app/core/layout/footer/footer.component.html";
 	const footerComponentContent = `
-<footer class="footer mt-auto py-3 bg-body-tertiary">
+<p>&nbsp;</p>
+<footer class="footer mt-auto bg-body-tertiary">
   <div class="container">
     <span class="text-body-secondary">Thank you.</span>
   </div>
@@ -201,7 +257,7 @@ footer {
   position:fixed;
   bottom:0px;
   width:100%;
-`;
+}`;
 
 	console.log("Updating " + footerCSSFile);
 	fs.writeFileSync(footerCSSFile, footerCSSContent);
@@ -215,13 +271,9 @@ function setMainAppWithLayoutElements() {
 	const appPageFile = "$artifactId/src/app/app.component.html";
 	const appPageContent = `
 <app-layout-header></app-layout-header>
-<main class="flex-shrink-0">
-  <div class="container">
-    <h1 class="mt-5">Place Holder Main Element</h1>
-    <p>
-  </div>
+<main>
+    <router-outlet></router-outlet>
 </main>
-<router-outlet></router-outlet>
 <app-layout-footer></app-layout-footer>
 `;
 
