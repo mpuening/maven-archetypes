@@ -66,5 +66,16 @@
 				<include>.gitignore</include>
 			</includes>
 		</fileSet>
+
+		<fileSet filtered="false" packaged="false" encoding="UTF-8">
+			<directory></directory>
+			<includes>
+				<include>mvnw</include>
+				<include>mvnw.cmd</include>
+			</includes>
+		</fileSet>
+		<fileSet filtered="false" packaged="false" encoding="UTF-8">
+			<directory>.mvn</directory>
+		</fileSet>
 	</fileSets>
 </archetype-descriptor>

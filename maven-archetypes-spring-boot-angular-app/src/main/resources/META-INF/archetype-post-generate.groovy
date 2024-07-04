@@ -23,9 +23,10 @@ def runProcess(String cmd, File dir) {
     }
 }
 
+def mvn = "sh ../mvnw"
 def npm = "./node/npm"
 def npx = "./node/npx"
-def ng = "./node/node ./node_modules/@angular/cli/bin/ng.js"
+def ng  = "./node/node ./node_modules/@angular/cli/bin/ng.js"
 
 // ==============================================
 println("Renaming $request.artifactId project modules...")
@@ -39,7 +40,7 @@ generatedBackendDir.renameTo(backendDir)
 // ==============================================
 println("Installing node, npm, and ng/cli...")
 
-runProcess("mvn package", frontendDir)
+runProcess("$mvn package", frontendDir)
 
 // ==============================================
 println("Creating Angular Project...")
