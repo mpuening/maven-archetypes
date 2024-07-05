@@ -7,59 +7,100 @@ println()
 
 // ==============================================
 
-def parentDir = new File(request.outputDirectory, request.artifactId)
-def frontendDir = new File(parentDir, (request.artifactId + "-frontend"))
-def backendDir = new File(parentDir, (request.artifactId + "-backend"))
+final PARENT_DIR = new File(request.outputDirectory, request.artifactId)
+final FRONTEND_DIR = new File(PARENT_DIR, (request.artifactId + "-frontend"))
+final BACKEND_DIR = new File(PARENT_DIR, (request.artifactId + "-backend"))
 
-def angularProjectDir = new File(frontendDir, request.artifactId)
+final ANGULAR_PROJECT_DIR = new File(FRONTEND_DIR, request.artifactId)
+
+final NODE_DIR = FRONTEND_DIR.getAbsolutePath() + java.io.File.separator + "node"
 
 // ==============================================
 
-def runProcess(String cmd, File dir) {
-    def process = cmd.execute(null, dir)
+def runProcess(String cmd, File dir, java.util.List<String> extraPaths) {
+    def envMap = new java.util.HashMap<String, String>(System.env)
+    def PATH = envMap.get("PATH");
+    for (String path : extraPaths) {
+    	PATH = path + java.io.File.pathSeparator + PATH;
+    }
+    envMap.put("PATH", PATH);
+    def env = envMap.entrySet().stream().map {
+        entry -> "${entry.getKey()}=${entry.getValue()}"
+    }.collect(java.util.stream.Collectors.toList())
+
+    def process = cmd.execute(env, dir)
     process.waitForProcessOutput((Appendable)System.out, System.err)
     if (process.exitValue() != 0) {
         throw new Exception("Command '$cmd' failed with code: ${process.exitValue()}")
     }
 }
 
-def mvn = "sh ../mvnw"
-def npm = "./node/npm"
-def npx = "./node/npx"
-def ng  = "./node/node ./node_modules/@angular/cli/bin/ng.js"
+def runProcess(String cmd, File dir) {
+    runProcess(cmd, dir, [])
+}
+
+// ==============================================
+
+// Determine commands: Unix / Windows flavors
+
+def __mvn = "sh ../mvnw"
+def __npm = "./node/npm"
+def __npx = "./node/npx"
+def __ng   = "./node/node ./node_modules/@angular/cli/bin/ng.js"
+
+// dot dot commands when running in sub-directory
+def __dd_npm = "../node/npm"
+def __dd_ng  = "../node/node ../node_modules/@angular/cli/bin/ng.js"
+
+if (System.properties['os.name'].toLowerCase().contains('windows')) {
+    __mvn = "cmd /C ..\\mvnw.cmd"
+    __npm = "cmd /C .\\node\\npm.cmd"
+    __npx = "cmd /C .\\node\\npx.cmd"
+    __ng  = "cmd /C .\\node\\node.exe .\\node_modules\\@angular\\cli\\bin\\ng.js"
+
+    // dot dot commands when running in sub-directory
+    __dd_npm = "cmd /C ..\\node\\npm.cmd"
+    __dd_ng  = "cmd /C ..\\node\\node.exe ..\\node_modules\\@angular\\cli\\bin\\ng.js"
+} 
+
+final mvn = __mvn
+final npm = __npm
+final npx = __npx
+final ng  = __ng
+
+//dot dot commands when running in sub-directory
+final dd_npm = __dd_npm
+final dd_ng  = __dd_ng
 
 // ==============================================
 println("Renaming $request.artifactId project modules...")
 
-def generatedFrontendDir = new File(parentDir, "frontend")
-generatedFrontendDir.renameTo(frontendDir)
-
-def generatedBackendDir = new File(parentDir, "backend")
-generatedBackendDir.renameTo(backendDir)
+new File(PARENT_DIR, "frontend").renameTo(FRONTEND_DIR)
+new File(PARENT_DIR, "backend").renameTo(BACKEND_DIR)
 
 // ==============================================
 println("Installing node, npm, and ng/cli...")
 
-runProcess("$mvn package", frontendDir)
+runProcess("$mvn package", FRONTEND_DIR)
 
 // ==============================================
 println("Creating Angular Project...")
 
-runProcess("$ng new $request.artifactId --package-manager=npm --ssr=false --style=css --routing=true --skip-install=true --skip-git=true", frontendDir)
+runProcess("$ng new $request.artifactId --package-manager=npm --ssr=false --style=css --routing=true --skip-install=true --skip-git=true", FRONTEND_DIR)
 
 // ==============================================
 //println("Installing Tailwind CSS Support...")
 
 // https://tailwindcss.com/docs/guides/angular
-//runProcess("$npm install -D tailwindcss postcss autoprefixer", angularProjectDir)
-//runProcess("$npx tailwindcss init", angularProjectDir)
-//runProcess("$npm run TailwindCSSMods", frontendDir)
+//runProcess("$npm install -D tailwindcss postcss autoprefixer", ANGULAR_PROJECT_DIR, [NODE_DIR])
+//runProcess("$npx tailwindcss init", ANGULAR_PROJECT_DIR, [NODE_DIR])
+//runProcess("$npm run TailwindCSSMods", FRONTEND_DIR, [NODE_DIR])
 
 // ==============================================
 println("Installing Bootstrap Support...")
 
-runProcess("../$npm install bootstrap bootstrap-icons --save", angularProjectDir)
-runProcess("$npm run BootstrapMods", frontendDir)
+runProcess("$dd_npm install bootstrap bootstrap-icons --save", ANGULAR_PROJECT_DIR, [NODE_DIR])
+runProcess("$npm run BootstrapMods", FRONTEND_DIR, [NODE_DIR])
 
 // ==============================================
 
@@ -83,9 +124,9 @@ runProcess("$npm run BootstrapMods", frontendDir)
 // ==============================================
 println("Creating UI Layout...")
 
-runProcess("../$ng generate component --skip-tests=true --selector=app-layout-header core/layout/header", angularProjectDir)
-runProcess("../$ng generate component --skip-tests=true --selector=app-layout-footer core/layout/footer", angularProjectDir)
-runProcess("$npm run LayoutMods", frontendDir)
+runProcess("$dd_ng generate component --skip-tests=true --selector=app-layout-header core/layout/header", ANGULAR_PROJECT_DIR)
+runProcess("$dd_ng generate component --skip-tests=true --selector=app-layout-footer core/layout/footer", ANGULAR_PROJECT_DIR)
+runProcess("$npm run LayoutMods", FRONTEND_DIR, [NODE_DIR])
 
 // Might need properties passed in to indicate which is active
 
@@ -93,27 +134,27 @@ runProcess("$npm run LayoutMods", frontendDir)
 println("Creating UI Pages...")
 
 // Pages, home page, etc
-runProcess("../$ng generate component --skip-tests=true --selector=app-feature-me features/main/me", angularProjectDir)
-runProcess("../$ng generate component --skip-tests=true --selector=app-feature-help features/main/help", angularProjectDir)
-runProcess("../$ng generate component --skip-tests=true --selector=app-feature-main-sidemenu features/main/sidemenu", angularProjectDir)
-runProcess("$npm run MainFeatureMods", frontendDir)
+runProcess("$dd_ng generate component --skip-tests=true --selector=app-feature-me features/main/me", ANGULAR_PROJECT_DIR)
+runProcess("$dd_ng generate component --skip-tests=true --selector=app-feature-help features/main/help", ANGULAR_PROJECT_DIR)
+runProcess("$dd_ng generate component --skip-tests=true --selector=app-feature-main-sidemenu features/main/sidemenu", ANGULAR_PROJECT_DIR)
+runProcess("$npm run MainFeatureMods", FRONTEND_DIR, [NODE_DIR])
 
-runProcess("../$ng generate component --skip-tests=true --selector=app-feature-events features/admin/events", angularProjectDir)
-runProcess("../$ng generate component --skip-tests=true --selector=app-feature-support features/admin/support", angularProjectDir)
-runProcess("../$ng generate component --skip-tests=true --selector=app-feature-admin-sidemenu features/admin/sidemenu", angularProjectDir)
-runProcess("$npm run AdminFeatureMods", frontendDir)
+runProcess("$dd_ng generate component --skip-tests=true --selector=app-feature-events features/admin/events", ANGULAR_PROJECT_DIR)
+runProcess("$dd_ng generate component --skip-tests=true --selector=app-feature-support features/admin/support", ANGULAR_PROJECT_DIR)
+runProcess("$dd_ng generate component --skip-tests=true --selector=app-feature-admin-sidemenu features/admin/sidemenu", ANGULAR_PROJECT_DIR)
+runProcess("$npm run AdminFeatureMods", FRONTEND_DIR, [NODE_DIR])
 
 // ==============================================
 
 // Routing, Auth Guards
 
-runProcess("$npm run RoutingMods", frontendDir)
+runProcess("$npm run RoutingMods", FRONTEND_DIR, [NODE_DIR])
 
 // ==============================================
 
 // Create Wrapper Scripts
 
-def npmwFile = new File("$frontendDir/npmw")
+final npmwFile = new File("$FRONTEND_DIR/npmw")
 npmwFile.createNewFile()
 npmwFile.append("""#!/bin/sh
 
@@ -121,7 +162,7 @@ npmwFile.append("""#!/bin/sh
 
 """)
 
-def ngwFile = new File("$frontendDir/ngw")
+final ngwFile = new File("$FRONTEND_DIR/ngw")
 ngwFile.createNewFile()
 ngwFile.append("""#!/bin/sh
 
@@ -133,25 +174,25 @@ ngwFile.append("""#!/bin/sh
 println("Deleting bootstrapper project...")
 
 // First delete bootstrapper files...
-new File(frontendDir, "README.md").delete()
-new File(frontendDir, "package.json").delete()
-new File(frontendDir, "package-lock.json").delete()
-new File(frontendDir, "tsconfig.json").delete()
-new File(frontendDir, "src").deleteDir()
-new File(frontendDir, "node_modules").deleteDir()
-new File(frontendDir, "build").deleteDir()
-new File(frontendDir, "dist").deleteDir()
-new File(frontendDir, "target").deleteDir()
+new File(FRONTEND_DIR, "README.md").delete()
+new File(FRONTEND_DIR, "package.json").delete()
+new File(FRONTEND_DIR, "package-lock.json").delete()
+new File(FRONTEND_DIR, "tsconfig.json").delete()
+new File(FRONTEND_DIR, "src").deleteDir()
+new File(FRONTEND_DIR, "node_modules").deleteDir()
+new File(FRONTEND_DIR, "build").deleteDir()
+new File(FRONTEND_DIR, "dist").deleteDir()
+new File(FRONTEND_DIR, "target").deleteDir()
 
 // ==============================================
 println("Copying angular project to final location...")
 
 // Move files up a directory
-for (File f : angularProjectDir.listFiles()) {
+for (File f : ANGULAR_PROJECT_DIR.listFiles()) {
 	if (!f.toString().endsWith(request.artifactId)) {
-		java.nio.file.Files.move(f.toPath(), frontendDir.toPath().resolve(f.toPath().getFileName()))
+		java.nio.file.Files.move(f.toPath(), FRONTEND_DIR.toPath().resolve(f.toPath().getFileName()))
 	}
 }
 
 // Now that dir is empty, delete it
-angularProjectDir.deleteDir()
+ANGULAR_PROJECT_DIR.deleteDir()

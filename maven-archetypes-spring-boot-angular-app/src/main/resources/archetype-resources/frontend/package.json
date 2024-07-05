@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"description": "",
 	"scripts": {
-		"build": "npx tsc && webpack --mode='development'",
+		"build": "npx tsc && webpack --mode=development",
 		"BootstrapMods": "node build/BootstrapMods.js",
 		"TailwindCSSMods": "node build/TailwindCSSMods.js",
 		"LayoutMods": "node build/LayoutMods.js",
