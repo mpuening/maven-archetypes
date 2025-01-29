@@ -8,7 +8,7 @@ importHeaderAndFooterInAppComponentFile();
 // Not using this approach. 
 //setBodyClassesInAppComponentFile();
 
-importRouterLinkIntoHeader();
+importRouterLinkAndLoginButtonIntoHeader();
 
 setHeaderComponentHTMLFile();
 setFooterComponentHTMLFile();
@@ -20,9 +20,9 @@ setMainAppWithLayoutElements();
 //
 // Import RouterLink to Header Component
 //
-function importRouterLinkIntoHeader() {
+function importRouterLinkAndLoginButtonIntoHeader() {
 	const headerComponentFile = "$artifactId/src/app/core/layout/header/header.component.ts";
-	console.log("Updating " + headerComponentFile);
+	console.log("Updating (1) " + headerComponentFile);
 
 	const project = new Project({
 		tsConfigFilePath: './tsconfig.json',
@@ -40,9 +40,13 @@ function importRouterLinkIntoHeader() {
 				namedImports: ['RouterLink'],
 				moduleSpecifier: '@angular/router'
 			});
+			sourceFile.addImportDeclaration({
+				namedImports: ['LoginLogoutButtonComponent'],
+				moduleSpecifier: './../../auth/login-logout-button.component'
+			});
 
 			//
-			// Reference RouterLink in @Component.imports
+			// Reference RouterLink, LoginLogoutButton in @Component.imports
 			//
 			const decorators = HeaderComponent.getDecorators();
 			decorators.forEach(decorator => {
@@ -57,6 +61,9 @@ function importRouterLinkIntoHeader() {
 									entry
 										.getFirstChildByKind(SyntaxKind.ArrayLiteralExpression)
 										?.addElement('RouterLink');
+									entry
+										.getFirstChildByKind(SyntaxKind.ArrayLiteralExpression)
+										?.addElement('LoginLogoutButtonComponent');
 								}
 							});
 						}
@@ -214,8 +221,8 @@ function setHeaderComponentHTMLFile() {
             <a class="nav-link" routerLink="/admin">Admin</a>
           </li>
         </ul>
-        <form class="d-flex" role="logout">
-          <button class="btn btn-outline-success" type="submit">Logout</button>
+        <form class="d-flex" role="authenticatison">
+          <app-login-logout-button></app-login-logout-button>
         </form>
       </div>
     </div>

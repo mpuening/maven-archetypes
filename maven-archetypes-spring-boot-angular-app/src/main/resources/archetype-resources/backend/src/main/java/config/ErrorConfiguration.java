@@ -16,7 +16,6 @@ import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.HandlerMapping;
-import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -73,10 +72,6 @@ public class ErrorConfiguration {
 			} catch (Exception ex) {
 				HandlerExecutionChain handlerExecutionChain = getHandlerExecutionChain((HttpServletRequest) request);
 				Object handler = handlerExecutionChain != null ? handlerExecutionChain.getHandler() : null;
-				if (handler instanceof ResourceHttpRequestHandler) {
-					// If handler is not supported, re-throw exception
-					throw ex;
-				}
 				handlerExceptionResolver.resolveException((HttpServletRequest) request, (HttpServletResponse) response,
 						handler, ex);
 			}

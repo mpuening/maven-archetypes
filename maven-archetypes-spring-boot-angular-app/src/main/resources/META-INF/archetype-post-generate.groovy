@@ -79,31 +79,16 @@ new File(PARENT_DIR, "frontend").renameTo(FRONTEND_DIR)
 new File(PARENT_DIR, "backend").renameTo(BACKEND_DIR)
 
 // ==============================================
+println("Patching up Java Project...")
+
+runProcess("$mvn -f keystore.xml generate-resources", BACKEND_DIR)
+
+// ==============================================
 println("Installing node, npm, and ng/cli...")
 
 runProcess("$mvn package", FRONTEND_DIR)
 
 // ==============================================
-println("Creating Angular Project...")
-
-runProcess("$ng new $request.artifactId --package-manager=npm --ssr=false --style=css --routing=true --skip-install=true --skip-git=true", FRONTEND_DIR)
-
-// ==============================================
-//println("Installing Tailwind CSS Support...")
-
-// https://tailwindcss.com/docs/guides/angular
-//runProcess("$npm install -D tailwindcss postcss autoprefixer", ANGULAR_PROJECT_DIR, [NODE_DIR])
-//runProcess("$npx tailwindcss init", ANGULAR_PROJECT_DIR, [NODE_DIR])
-//runProcess("$npm run TailwindCSSMods", FRONTEND_DIR, [NODE_DIR])
-
-// ==============================================
-println("Installing Bootstrap Support...")
-
-runProcess("$dd_npm install bootstrap bootstrap-icons --save", ANGULAR_PROJECT_DIR, [NODE_DIR])
-runProcess("$npm run BootstrapMods", FRONTEND_DIR, [NODE_DIR])
-
-// ==============================================
-
 //
 // https://blog.logrocket.com/angular-modules-best-practices-for-structuring-your-app/
 //
@@ -122,13 +107,43 @@ runProcess("$npm run BootstrapMods", FRONTEND_DIR, [NODE_DIR])
 //
 
 // ==============================================
+println("Creating Angular Project...")
+
+runProcess("$ng new $request.artifactId --package-manager=npm --ssr=false --style=css --routing=true --skip-install=true --skip-git=true", FRONTEND_DIR)
+
+// ==============================================
+println("Adding app config support...")
+
+runProcess("$npm run ConfigMods", FRONTEND_DIR, [NODE_DIR])
+
+// ==============================================
+println("Creating Auth Services...")
+
+runProcess("$dd_npm install @azure/msal-browser @azure/msal-angular --save", ANGULAR_PROJECT_DIR, [NODE_DIR])
+runProcess("$dd_ng generate service --skip-tests=true core/auth/auth", ANGULAR_PROJECT_DIR)
+runProcess("$dd_ng generate component --flat --skip-tests=true --selector=app-login-logout-button core/auth/login-logout-button", ANGULAR_PROJECT_DIR)
+runProcess("$npm run AuthMods", FRONTEND_DIR, [NODE_DIR])
+
+// ==============================================
+//println("Installing Tailwind CSS Support...")
+
+// https://tailwindcss.com/docs/guides/angular
+//runProcess("$npm install -D tailwindcss postcss autoprefixer", ANGULAR_PROJECT_DIR, [NODE_DIR])
+//runProcess("$npx tailwindcss init", ANGULAR_PROJECT_DIR, [NODE_DIR])
+//runProcess("$npm run TailwindCSSMods", FRONTEND_DIR, [NODE_DIR])
+
+// ==============================================
+println("Installing Bootstrap Support...")
+
+runProcess("$dd_npm install bootstrap bootstrap-icons --save", ANGULAR_PROJECT_DIR, [NODE_DIR])
+runProcess("$npm run BootstrapMods", FRONTEND_DIR, [NODE_DIR])
+
+// ==============================================
 println("Creating UI Layout...")
 
 runProcess("$dd_ng generate component --skip-tests=true --selector=app-layout-header core/layout/header", ANGULAR_PROJECT_DIR)
 runProcess("$dd_ng generate component --skip-tests=true --selector=app-layout-footer core/layout/footer", ANGULAR_PROJECT_DIR)
 runProcess("$npm run LayoutMods", FRONTEND_DIR, [NODE_DIR])
-
-// Might need properties passed in to indicate which is active
 
 // ==============================================
 println("Creating UI Pages...")

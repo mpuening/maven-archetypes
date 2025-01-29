@@ -2,6 +2,7 @@ package ${groupId}.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
@@ -14,6 +15,7 @@ import org.springframework.security.ldap.userdetails.LdapUserDetailsMapper;
  * Configuration for an Authentication Provider using LDAP.
  */
 @Configuration
+@Conditional(AuthorizationServerConfiguration.EnableAuthorizationServerCondition.class)
 public class LDAPAuthConfiguration {
 
 	@Value("${app.security.ldap-url}")

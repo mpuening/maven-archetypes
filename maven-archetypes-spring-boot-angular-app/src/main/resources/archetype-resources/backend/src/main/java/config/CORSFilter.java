@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -26,11 +27,11 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
+@Conditional(AuthorizationServerConfiguration.EnableAuthorizationServerCondition.class)
 public class CORSFilter implements Filter {
 
 	private final Set<String> allowedOrigins;
 
-	@Autowired
 	public CORSFilter(@Value("#[[${spring.security.cors.allowed-origins:*}]]#") Set<String> allowedOrigins) {
 		this.allowedOrigins = allowedOrigins;
 	}

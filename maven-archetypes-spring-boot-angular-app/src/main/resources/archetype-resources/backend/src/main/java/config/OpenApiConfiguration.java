@@ -20,8 +20,8 @@ import io.swagger.v3.oas.annotations.security.SecuritySchemes;
 		@SecurityScheme(name = "oauth2", type = SecuritySchemeType.OAUTH2,
 				flows = @OAuthFlows(authorizationCode = 
 					@OAuthFlow(
-							authorizationUrl = "${app.security.oauth2.authorization-uri}", 
-							tokenUrl = "${app.security.oauth2.token-uri}",
+							authorizationUrl = "${app.swagger.oauth2.authorization-uri}", 
+							tokenUrl = "${app.swagger.oauth2.token-uri}",
 							scopes = {
 								@OAuthScope(name = "openid", description = "OpenID"),
 								@OAuthScope(name = "profile", description = "Profile")})))})

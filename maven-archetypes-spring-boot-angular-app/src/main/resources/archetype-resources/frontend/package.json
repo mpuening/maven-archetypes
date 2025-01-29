@@ -4,6 +4,8 @@
 	"description": "",
 	"scripts": {
 		"build": "npx tsc && webpack --mode=development",
+		"ConfigMods": "node build/ConfigMods.js",
+		"AuthMods": "node build/AuthMods.js",
 		"BootstrapMods": "node build/BootstrapMods.js",
 		"TailwindCSSMods": "node build/TailwindCSSMods.js",
 		"LayoutMods": "node build/LayoutMods.js",
