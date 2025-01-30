@@ -30,6 +30,7 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -120,4 +121,19 @@ public class AuthorizationServerConfiguration {
 		RequestDispatcher rd = request.getRequestDispatcher("/.well-known/openid-configuration");
 		rd.forward(request, response);
 	}
+
+	@GetMapping("/oauth2/logged-out")
+	@ResponseBody
+	public String loggedOut(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html");
+		return """
+		<!DOCTYPE html>
+		<html>
+		<body>
+		<h1>You are logged out.</h1>
+		<a href="https://localhost:8443">Visit app again.</a>
+		</body>
+		</html>""";
+	}
+
 }

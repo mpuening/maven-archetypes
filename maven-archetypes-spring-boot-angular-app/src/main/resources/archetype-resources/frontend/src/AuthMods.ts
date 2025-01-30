@@ -41,14 +41,14 @@ function msalConfig() {
       //authority: 'https://127.0.0.1:8443',
       //knownAuthorities: ['https://127.0.0.1:8443'],
       //protocolMode: 'OIDC',
-      //redirectUri: '/',
-      //postLogoutRedirectUri: 'https://127.0.0.1:8443/connect/logout'
+      //redirectUri: 'https://localhost:8443',
+      //postLogoutRedirectUri: 'https://127.0.0.1:8443/oauth2/logged-out'
       clientId: getApplicationConfigValue("clientId"),
       authority: getApplicationConfigValue("authority"),
       knownAuthorities: getApplicationConfigValue("knownAuthorities"),
       protocolMode: getApplicationConfigValue("protocolMode"),
       redirectUri: getApplicationConfigValue("redirectUri"),
-      //postLogoutRedirectUri: getApplicationConfigValue("redirectUri")
+      postLogoutRedirectUri: getApplicationConfigValue("postLogoutRedirectUri")
     },
     cache: {
       cacheLocation: BrowserCacheLocation.LocalStorage,
@@ -75,9 +75,8 @@ export function MsalGuardConfigurationFactory(): MsalGuardConfiguration {
   return {
     interactionType: InteractionType.Redirect,
     authRequest: {
-		scopes: [
-			"openid"
-		]
+      //scopes: [ "openid" ]
+      scopes: getApplicationConfigValue("scopes")
 	}
   };
 }
@@ -237,10 +236,7 @@ export class AuthService {
   }
 
   login() {
-	  // Prefer this method
-    console.log('login button pressed 2.');
     this.loginRedirect();
-    return false;
   }
 
   loginRedirect() {
@@ -274,17 +270,13 @@ export class AuthService {
     if (popup) {
       this.msalService.logoutPopup({
         mainWindowRedirectUri: '/',
-
-        idTokenHint: account?.idToken,
-        postLogoutRedirectUri: 'https://twitter.com'
+        idTokenHint: account?.idToken
       });
     } else {
       this.msalService.logoutRedirect({
-        idTokenHint: account?.idToken,
-        postLogoutRedirectUri: 'https://twitter.com'
+        idTokenHint: account?.idToken
       });
     }
-    return false;
   }
 
   stop(): void {
@@ -410,13 +402,12 @@ export class LoginLogoutButtonComponent {
   }
 
   login() {
-    console.log('login button pressed 1.');
     this.authService.login();
     return false;
   }
 
   logout() {
-    console.log('logout button pressed 1.');
+    this.authService.logout();
     return false;
   }
 

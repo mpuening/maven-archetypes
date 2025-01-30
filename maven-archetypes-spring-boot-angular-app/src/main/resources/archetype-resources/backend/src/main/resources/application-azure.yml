@@ -1,0 +1,22 @@
+azure:
+  tenant: PUT_TENANT_ID_HERE
+  client-id: PUT_CLIENT_ID_HERE
+  login-url: https://login.microsoftonline.com
+  logout-url: https://login.windows.net/${azure.tenant}/oauth2/logout
+
+app:
+  security:
+    authority: ${azure.login-url}/${azure.tenant}
+    knownAuthorities:
+      - ${azure.login-url}/${azure.tenant}
+    protocolMode: MSAL
+    clientId: ${azure.client-id}
+    scopes:
+      - openid
+      - api://${azure.client-id}/Example.Read
+    redirectUri: http://localhost:8080
+    postLogoutRedirectUri: ${azure.logout-url}
+  swagger:
+    oauth2:
+      authorization-uri: ${azure.login-url}/${azure.tenant}/oauth2/v2.0/authorize
+      token-uri: ${azure.login-url}/${azure.tenant}/oauth2/v2.0/token

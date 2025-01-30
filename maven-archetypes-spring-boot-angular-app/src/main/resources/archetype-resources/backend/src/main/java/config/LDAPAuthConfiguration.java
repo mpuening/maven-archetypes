@@ -18,7 +18,7 @@ import org.springframework.security.ldap.userdetails.LdapUserDetailsMapper;
 @Conditional(AuthorizationServerConfiguration.EnableAuthorizationServerCondition.class)
 public class LDAPAuthConfiguration {
 
-	@Value("${app.security.ldap-url}")
+	@Value("${app.ldap.url}")
 	protected String ldapUrl;
 
 	@Bean

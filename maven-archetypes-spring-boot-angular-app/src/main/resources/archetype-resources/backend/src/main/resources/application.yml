@@ -59,9 +59,9 @@ app:
     scopes:
       - openid
     redirectUri: https://localhost:8443
-    postLogoutRedirectUri: https://127.0.0.1:8443/connect/logout
-    ldap-url: ldap://localhost:8389/dc=example,dc=org
-    end-session-endpoint: http://127.0.0.1:8443/connect/logout
+    postLogoutRedirectUri: https://127.0.0.1:8443/oauth2/logged-out
+  ldap:
+    url: ldap://localhost:8389/dc=example,dc=org
   swagger:
     oauth2:
       authorization-uri: https://127.0.0.1:8443/oauth2/authorize

@@ -55,7 +55,7 @@ spring:
                 - https://localhost:8443/login/oauth2/code/app-client
                 - https://localhost:8443/swagger-ui/oauth2-redirect.html
               post-logout-redirect-uris:
-                - http://localhost:8080/logged-out
+                - https://127.0.0.1:8443/oauth2/logged-out
               scopes:
                 - openid
                 - offline_access
