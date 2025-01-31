@@ -4,14 +4,15 @@
 	"description": "",
 	"scripts": {
 		"build": "npx tsc && webpack --mode=development",
-		"ConfigMods": "node build/ConfigMods.js",
-		"AuthMods": "node build/AuthMods.js",
-		"BootstrapMods": "node build/BootstrapMods.js",
-		"TailwindCSSMods": "node build/TailwindCSSMods.js",
-		"LayoutMods": "node build/LayoutMods.js",
-		"RoutingMods": "node build/RoutingMods.js",
-		"MainFeatureMods": "node build/MainFeatureMods.js",
-		"AdminFeatureMods": "node build/AdminFeatureMods.js"
+
+		"ngConfigMods": "node build/ng/ConfigMods.js",
+		"ngAuthMods": "node build/ng/AuthMods.js",
+		"ngBootstrapMods": "node build/ng/BootstrapMods.js",
+		"ngTailwindCSSMods": "node build/ng/TailwindCSSMods.js",
+		"ngLayoutMods": "node build/ng/LayoutMods.js",
+		"ngRoutingMods": "node build/ng/RoutingMods.js",
+		"ngMainFeatureMods": "node build/ng/MainFeatureMods.js",
+		"ngAdminFeatureMods": "node build/ng/AdminFeatureMods.js"
 	},
 	"author": "",
 	"license": "ISC",
