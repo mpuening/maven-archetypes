@@ -18,6 +18,22 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<properties>
+		<!-- This is the default location where npm builds the project -->
+		<output.dir>dist</output.dir>
+	</properties>
+
+	<profiles>
+		<profile>
+			<activation>
+				<file><exists>angular.json</exists></file>
+			</activation>
+			<properties>
+				<output.dir>dist/${artifactId}/browser</output.dir>
+			</properties>
+		</profile>
+	</profiles>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -46,7 +62,7 @@
 								${project.build.directory}/classes/static</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${basedir}/dist/${artifactId}/browser</directory>
+									<directory>${basedir}/${output.dir}</directory>
 								</resource>
 							</resources>
 						</configuration>

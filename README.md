@@ -162,7 +162,10 @@ Spring Boot SPA Application
 > This project is a work in progress and not yet complete.
 
 To create a simple Spring Boot SPA application with a login form and
-a Bootstrap UI and support for OAuth2, run this command:
+a Bootstrap UI and support for OAuth2, run one of the following commands.
+
+For an Angular application:
+
 
 ```
 mvn archetype:generate \
@@ -174,6 +177,21 @@ mvn archetype:generate \
     -DartifactId=my-spring-boot-app \
     -Dversion=0.0.1-SNAPSHOT
     -DspaType=angular
+```
+
+For a VueJS application:
+
+
+```
+mvn archetype:generate \
+    -Darchetype.interactive=false --batch-mode \
+    -DarchetypeGroupId=io.github.mpuening \
+    -DarchetypeArtifactId=maven-archetypes-spring-boot-spa-app \
+    -DarchetypeVersion=0.0.1-SNAPSHOT \
+    -DgroupId=org.example.springbootapp \
+    -DartifactId=my-spring-boot-app \
+    -Dversion=0.0.1-SNAPSHOT
+    -DspaType=vuejs
 ```
 
 Note: replace the `groupId` and `artifactId` and `version` on the last lines of the 
@@ -188,5 +206,4 @@ This Spring Boot application bizarrely combines all the following into a single 
 The SPA code contains the OAuth2 client.
 
 It can be good for learning purposes.
-
 

@@ -46,31 +46,37 @@ def runProcess(String cmd, File dir) {
 def __mvn = "sh ../mvnw"
 def __npm = "./node/npm"
 def __npx = "./node/npx"
-def __ng   = "./node/node ./node_modules/@angular/cli/bin/ng.js"
+def __ng  = "./node/node ./node_modules/@angular/cli/bin/ng.js"
+def __vue = "./node/node ./node_modules/@vue/cli/bin/vue.js"
 
 // dot dot commands when running in sub-directory
 def __dd_npm = "../node/npm"
 def __dd_ng  = "../node/node ../node_modules/@angular/cli/bin/ng.js"
+def __dd_vue = "../node/node ../node_modules/@vue/cli/bin/vue.js"
 
 if (System.properties['os.name'].toLowerCase().contains('windows')) {
     __mvn = "cmd /C ..\\mvnw.cmd"
     __npm = "cmd /C .\\node\\npm.cmd"
     __npx = "cmd /C .\\node\\npx.cmd"
     __ng  = "cmd /C .\\node\\node.exe .\\node_modules\\@angular\\cli\\bin\\ng.js"
+    __vue = "cmd /C .\\node\\node.exe .\\node_modules\\@vue\\cli\\bin\\vue.js"
 
     // dot dot commands when running in sub-directory
     __dd_npm = "cmd /C ..\\node\\npm.cmd"
     __dd_ng  = "cmd /C ..\\node\\node.exe ..\\node_modules\\@angular\\cli\\bin\\ng.js"
+    __dd_vue = "cmd /C ..\\node\\node.exe ..\\node_modules\\@vue\\cli\\bin\\vue.js"
 } 
 
 final mvn = __mvn
 final npm = __npm
 final npx = __npx
 final ng  = __ng
+final vue = __vue
 
 //dot dot commands when running in sub-directory
 final dd_npm = __dd_npm
 final dd_ng  = __dd_ng
+final dd_vue = __dd_vue
 
 // ==============================================
 println("Renaming $request.artifactId project modules...")
@@ -84,13 +90,13 @@ println("Patching up Java Project...")
 runProcess("$mvn -f keystore.xml generate-resources", BACKEND_DIR)
 
 // ==============================================
-println("Installing node, npm, and ng/cli...")
+println("Installing node, npm, ng/cli and vue/cli...")
 
 runProcess("$mvn package", FRONTEND_DIR)
 
 // ==================================================
 // ANGULAR ANGULAR ANGULAR
-/// ==================================================
+// ==================================================
 if ("angular".equalsIgnoreCase("$spaType")) {
 
 	// ==============================================
@@ -169,15 +175,37 @@ if ("angular".equalsIgnoreCase("$spaType")) {
 	// Routing, Auth Guards
 	
 	runProcess("$npm run ngRoutingMods", FRONTEND_DIR, [NODE_DIR])
-} else {
+}
+
+
+
+// ==================================================
+// VUEJS VUEJS VUEJS
+// ==================================================
+else if ("vuejs".equalsIgnoreCase("$spaType")) {
+
+	// ==============================================
+	println("Creating VueJS Project...")
+	
+	// If you need to update the presets, make sure to remove all the spaces so that the command can run properly
+	final presets = '{"useConfigFiles":true,"plugins":{"@vue/cli-plugin-babel":{},"@vue/cli-plugin-typescript":{"classComponent":true,"useTsWithBabel":true},"@vue/cli-plugin-router":{"historyMode":true},"@vue/cli-plugin-eslint":{"config":"base","lintOn":["save"]},"@vue/cli-plugin-unit-jest":{}},"vueVersion":"3"}'
+
+	runProcess("$vue create --no-git --inlinePreset $presets $request.artifactId", FRONTEND_DIR)
+
+}
+
+// ==================================================
+// ERROR ERROR ERROR
+// ==================================================
+else {
 	println();
 	println();
 	println();
-	println("${spaType} is not a supported SPA type.")
+	println("ERROR: ${spaType} is not a supported SPA type.")
 	println();
 	println();
 	println();
-	println("${nonsense_var_to_break_script}")
+	throw new Exception("ERROR: ${spaType} is not a supported SPA type.")
 }
 
 // ==============================================
