@@ -26,7 +26,7 @@ import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
  * This is the configuration for the OAuth2 Authorization Server. It uses the
  * auth provider that is configured in LDAPAuthConfiguration.
  * 
- * It also configuraes a custom login page as well as customizing the access
+ * It also configures a custom login page as well as customizing the access
  * tokens.
  */
 @Configuration
