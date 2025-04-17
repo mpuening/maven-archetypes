@@ -1,6 +1,7 @@
 //
 // Spring Boot SPA App Post Processor
 //
+
 println()
 println("Beginning Spring Boot SPA App Post Processor")
 println()
@@ -37,6 +38,14 @@ def runProcess(String cmd, File dir, java.util.List<String> extraPaths) {
 
 def runProcess(String cmd, File dir) {
     runProcess(cmd, dir, [])
+}
+
+def getInstanceOfClass(File frontEndDir, String spaType, String groovyFile) {
+	final SCRIPTS_DIR = new File(frontEndDir, ("src" + java.io.File.separator + spaType))
+	final xClassFile = new File(SCRIPTS_DIR, groovyFile);
+	final xClass = new GroovyClassLoader(getClass().getClassLoader()).parseClass(xClassFile);
+	final x = xClass.newInstance();
+	return x;
 }
 
 // ==============================================
@@ -192,7 +201,24 @@ else if ("vuejs".equalsIgnoreCase("$spaType")) {
 
 	runProcess("$vue create --no-git --inlinePreset $presets $request.artifactId", FRONTEND_DIR)
 
+	// https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/samples/msal-browser-samples/vue3-sample-app/src/authConfig.ts
 }
+
+// ==================================================
+// SVELTE SVELTE SVELTE
+// ==================================================
+else if ("svelte".equalsIgnoreCase("$spaType")) {
+
+	// ==============================================
+	println("Creating Svelte Project...")
+	
+	// https://vite.dev/guide/
+	runProcess("$npm create vite $request.artifactId -- --template svelte-ts", FRONTEND_DIR, [NODE_DIR])
+
+	final routingMods = getInstanceOfClass(FRONTEND_DIR, "svelte", "RoutingMods.groovy")
+	routingMods.doit();
+}
+
 
 // ==================================================
 // ERROR ERROR ERROR

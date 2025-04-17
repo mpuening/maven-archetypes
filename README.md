@@ -175,7 +175,7 @@ mvn archetype:generate \
     -DarchetypeVersion=0.0.1-SNAPSHOT \
     -DgroupId=org.example.springbootapp \
     -DartifactId=my-spring-boot-app \
-    -Dversion=0.0.1-SNAPSHOT
+    -Dversion=0.0.1-SNAPSHOT \
     -DspaType=angular
 ```
 
@@ -190,7 +190,7 @@ mvn archetype:generate \
     -DarchetypeVersion=0.0.1-SNAPSHOT \
     -DgroupId=org.example.springbootapp \
     -DartifactId=my-spring-boot-app \
-    -Dversion=0.0.1-SNAPSHOT
+    -Dversion=0.0.1-SNAPSHOT \
     -DspaType=vuejs
 ```
 

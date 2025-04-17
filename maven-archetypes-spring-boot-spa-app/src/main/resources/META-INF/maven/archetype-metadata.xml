@@ -40,6 +40,7 @@
 				<include>**/*.html</include>
 				<include>**/*.ts</include>
 				<include>**/*.js</include>
+				<include>**/*.groovy</include>
 			</includes>
 		</fileSet>
 
