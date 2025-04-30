@@ -42,7 +42,7 @@
 		<tomee-runtime.version>9.1.1</tomee-runtime.version>
 
 		<!-- Odds and ends -->
-		<bootstrap.version>4.4.1</bootstrap.version>
+		<bootstrap.version>5.0.0</bootstrap.version>
 		<jquery.version>3.4.1</jquery.version>
 
 		<!-- Library support for Open Liberty -->
