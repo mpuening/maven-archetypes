@@ -19,6 +19,7 @@ import {
   LogLevel,
   Configuration,
   BrowserCacheLocation,
+  ProtocolMode,
 } from '@azure/msal-browser';
 
 import {
@@ -26,6 +27,8 @@ import {
   PublicClientApplication,
   InteractionType
 } from '@azure/msal-browser';
+
+import { ServerResponseType} from '@azure/msal-common';
 
 import {
   MsalInterceptorConfiguration,
@@ -35,20 +38,35 @@ import {
 import { getApplicationConfigValue } from '../config/config';
 
 function msalConfig() {
+  // Default values
+  var clientId = 'app-client';
+  var authority = 'https://127.0.0.1:8443';
+  var knownAuthorities = ['https://127.0.0.1:8443'];
+  var protocolMode = ProtocolMode['OIDC' as keyof typeof ProtocolMode];
+  var redirectUri = 'https://localhost:8443';
+  var postLogoutRedirectUri = 'https://127.0.0.1:8443/oauth2/logged-out';
+
+  // If we can get values from the config, use them
+  if (getApplicationConfigValue("clientId") != null) {
+    clientId = getApplicationConfigValue("clientId");
+    authority = getApplicationConfigValue("authority");
+    knownAuthorities = getApplicationConfigValue("knownAuthorities");
+    protocolMode = ProtocolMode[getApplicationConfigValue("protocolMode") as keyof typeof ProtocolMode];
+    redirectUri = getApplicationConfigValue("redirectUri");
+    postLogoutRedirectUri = getApplicationConfigValue("postLogoutRedirectUri");
+  }
+
   const msalConfig: Configuration = {
     auth: {
-      //clientId: 'app-client',
-      //authority: 'https://127.0.0.1:8443',
-      //knownAuthorities: ['https://127.0.0.1:8443'],
-      //protocolMode: 'OIDC',
-      //redirectUri: 'https://localhost:8443',
-      //postLogoutRedirectUri: 'https://127.0.0.1:8443/oauth2/logged-out'
-      clientId: getApplicationConfigValue("clientId"),
-      authority: getApplicationConfigValue("authority"),
-      knownAuthorities: getApplicationConfigValue("knownAuthorities"),
-      protocolMode: getApplicationConfigValue("protocolMode"),
-      redirectUri: getApplicationConfigValue("redirectUri"),
-      postLogoutRedirectUri: getApplicationConfigValue("postLogoutRedirectUri")
+      clientId: clientId,
+      authority: authority,
+      knownAuthorities: knownAuthorities,
+      protocolMode: protocolMode,
+      redirectUri: redirectUri,
+      postLogoutRedirectUri: postLogoutRedirectUri,
+      OIDCOptions: {
+        serverResponseType: ServerResponseType.QUERY
+      }
     },
     cache: {
       cacheLocation: BrowserCacheLocation.LocalStorage,
@@ -59,36 +77,54 @@ function msalConfig() {
           console.log(message);
         },
         logLevel: LogLevel.Verbose,
-        piiLoggingEnabled: false,
-      },
-    },
+        piiLoggingEnabled: false
+      }
+    }
   };
   return  msalConfig;
 }
-
 
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication(msalConfig());
 }
 
 export function MsalGuardConfigurationFactory(): MsalGuardConfiguration {
+  // Default values
+  var scopes = [ 'openid' ];
+
+  // If we can get values from the config, use them
+  if (getApplicationConfigValue("scopes") != null) {
+    scopes = getApplicationConfigValue("scopes");
+  }
+
   return {
     interactionType: InteractionType.Redirect,
     authRequest: {
-      //scopes: [ "openid" ]
-      scopes: getApplicationConfigValue("scopes")
-	}
+      scopes: scopes
+	  }
   };
 }
 
 export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
-  const protectedResourceMap = new Map<string, Array<string>>();
-  // FIXME
-  protectedResourceMap.set("/", ["openid"]);
+  // Default values
+  var scopes = [ 'openid' ];
+
+  // If we can get values from the config, use them
+  if (getApplicationConfigValue("scopes") != null) {
+    scopes = getApplicationConfigValue("scopes");
+  }
+
+  const protectedResourceMap = new Map<string, Array<string> | null>([
+    ["https://localhost:8443/api", scopes]
+    //["https://graph.microsoft.com/v1.0/me", ["user.read", "profile"]],
+    //["https://myapplication.com/unprotected", null],
+    //["https://myapplication.com/unprotected/post", [{ httpMethod: 'POST', scopes: null }]],
+    //["https://myapplication.com", ["custom.scope"]
+  ]);
 
   return {
-    interactionType: InteractionType.Redirect,
-    protectedResourceMap
+    interactionType: InteractionType.Popup,
+    protectedResourceMap: protectedResourceMap
   };
 }
 `;
@@ -155,8 +191,7 @@ export class AuthService {
       .pipe(
         filter(
           (msg: EventMessage) =>
-            msg.eventType === EventType.ACCOUNT_ADDED ||
-            msg.eventType === EventType.ACCOUNT_REMOVED
+            msg.eventType === EventType.LOGIN_SUCCESS
         )
       )
       .subscribe((result: EventMessage) => {
@@ -178,44 +213,6 @@ export class AuthService {
         this.setLoggedIn();
         this.checkAndSetActiveAccount();
       });
-
-    /*
-    this.msalBroadcastService.inProgress$
-      .pipe(
-        filter(
-          (status: InteractionStatus) => status === InteractionStatus.None
-        ),
-        takeUntil(this._destroying$)
-      )
-      .subscribe(() => {
-        this.setLoginDisplay();
-        this.checkAndSetActiveAccount();
-      });
-
-    this.msalBroadcastService.msalSubject$
-      .pipe(
-        filter(
-          (msg: EventMessage) => msg.eventType === EventType.LOGOUT_SUCCESS
-        ),
-        takeUntil(this._destroying$)
-      )
-      .subscribe((result: EventMessage) => {
-        this.setLoginDisplay();
-        this.checkAndSetActiveAccount();
-      });
-
-    this.msalBroadcastService.msalSubject$
-      .pipe(
-        filter(
-          (msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS
-        ),
-        takeUntil(this._destroying$)
-      )
-      .subscribe((result: EventMessage) => {
-        const payload = result.payload as AuthenticationResult;
-        this.authService.instance.setActiveAccount(payload.account);
-      });
-    */
   }
 
   setIFrame() {
@@ -233,6 +230,11 @@ export class AuthService {
       let accounts = this.msalService.instance.getAllAccounts();
       this.msalService.instance.setActiveAccount(accounts[0]);
     }
+  }
+
+  getActiveAccount() {
+    let activeAccount = this.msalService.instance.getActiveAccount();
+    return activeAccount;
   }
 
   login() {
@@ -284,8 +286,7 @@ export class AuthService {
     this._destroying$.complete();
   }
 
-}
-`;
+}`;
 
 	console.log("Updating " + serviceFile);
 	fs.mkdirSync(serviceDir, { recursive: true });
@@ -427,6 +428,7 @@ function setLoginLogoutButtonComponentHTMLFile() {
 
 	const loginLogoutButtonComponentFile = "$artifactId/src/app/core/auth/login-logout-button.component.html";
 	const loginLogoutButtonComponentContent = `
+<a href="https://127.0.0.1:8443/.well-known/openid-configuration">OpenId Config</a>
 <button *ngIf="!isLoggedIn()" (click)="login()">Login</button>
 <button *ngIf="isLoggedIn()" (click)="logout()">Logout</button>
 `;

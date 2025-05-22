@@ -29,11 +29,16 @@ export function loadApplicationConfig() {
 }
 
 export function getApplicationConfigValue(key: string) {
-  const json = window.sessionStorage.getItem('appConfig');
-  const config = json != null ? JSON.parse(json) : {};
-  const value = config[key];
-  return value;
-}`;
+  try {
+    const json = window.sessionStorage.getItem('appConfig');
+    const config = json != null ? JSON.parse(json) : {};
+    const value = config[key];
+    return value;
+  } catch (error) {
+    return null;
+  }
+}
+`;
 
 	console.log("Updating " + configFile);
 	fs.mkdirSync(configDir, { recursive: true });

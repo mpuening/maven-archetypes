@@ -7,7 +7,10 @@ importRouterLinkIntoSideMenu();
 setSideMenuComponentHTMLFile();
 
 importSideMenuIntoMainFeatures();
+
+setMeComponentFile();
 setMeComponentHTMLFile();
+
 setHelpComponentHTMLFile();
 
 //=========================================================
@@ -59,7 +62,7 @@ function importRouterLinkIntoSideMenu() {
 			});
 		}
 
-		sourceFile.save();
+		sourceFile.saveSync();
 	});
 }
 
@@ -141,7 +144,7 @@ function importSideMenuIntoMainFeatures() {
 			});
 		}
 
-		sourceFile.save();
+		sourceFile.saveSync();
 	});
 }
 
@@ -149,6 +152,120 @@ function importSideMenuIntoMainFeatures() {
 //
 // Content for the Me Component
 //
+
+// TODO: Instead of just replacing, should I add functions?
+function setMeComponentFile() {
+
+	const meComponentFile = "$artifactId/src/app/features/main/me/me.component.ts";
+
+	console.log("Updating " + meComponentFile);
+
+	const project = new Project({
+		tsConfigFilePath: './tsconfig.json',
+		skipAddingFilesFromTsConfig: true,
+	});
+
+	project.addSourceFilesAtPaths([ meComponentFile ]);
+	project.getSourceFiles().forEach((sourceFile) => {
+		let MeComponent = sourceFile.getClass('MeComponent');
+
+		if (MeComponent != null) {
+			//
+			// Add import statements
+			//
+			sourceFile.addImportDeclaration({
+				namedImports: ['Observable'],
+				moduleSpecifier: 'rxjs/internal/Observable'
+			});
+			sourceFile.addImportDeclaration({
+				namedImports: ['HttpClient'],
+				moduleSpecifier: '@angular/common/http'
+			});
+			sourceFile.addImportDeclaration({
+				namedImports: ['AuthService'],
+				moduleSpecifier: '../../../core/auth/auth.service'
+			});
+
+			//
+			// Add New code
+			//			
+			const property = MeComponent.addProperty({
+              isStatic: false,
+              name: "payload",
+              type: "string",
+              initializer: "''"
+            });
+
+            const ctor = MeComponent.addConstructor({
+              parameters: [{
+                scope: Scope.Private,
+                name: "http",
+                type: "HttpClient"
+              }, {
+                scope: Scope.Private,
+                name: "authService",
+                type: "AuthService"
+              }],
+              //statements: "console.log('test');"
+            });
+
+            const showIdToken = MeComponent.addMethod({
+              isStatic: false, name: "showIdToken", returnType: "void"
+            });
+            showIdToken.setBodyText(`
+                let account = this.authService.getActiveAccount();
+                if (account != null && account.idToken != null) {
+                  this.payload = this.parseJwt(account.idToken);
+                } else {
+                  this.payload = "Not logged in"
+                }
+             `);
+
+            const parseJwt = MeComponent.addMethod({
+              isStatic: false, name: "parseJwt", returnType: "string", parameters: [{
+                name: "token",
+                type: "string"
+              }]
+            });
+            parseJwt.setBodyText(`
+                const parts = token.split('.');
+                if (parts.length !== 3) {
+                  return 'Invalid JWT format';
+                }
+                const decodedPayload = atob(parts[1]);
+                const payload = JSON.parse(decodedPayload);
+                const json = JSON.stringify(payload, null, 4);
+                return json;
+            `);
+
+            const showMeEndpoint = MeComponent.addMethod({
+              isStatic: false, name: "showMeEndpoint", returnType: "void"
+            });
+            showMeEndpoint.setBodyText(`
+                this.me().subscribe({
+                  next: (data) => {
+                    this.payload = JSON.stringify(data, null, 4);
+                  },
+                  error: (error) => {
+                    console.log(error)
+                  }
+                });
+           `);
+
+            const me = MeComponent.addMethod({
+              isStatic: false, name: "me", returnType: "Observable<any>"
+            });
+            me.setBodyText(`
+              return this.http.get<any>('/api/me');
+            `);
+
+		}
+		sourceFile.organizeImports();
+		sourceFile.formatText();
+		sourceFile.saveSync();
+	});
+}
+
 function setMeComponentHTMLFile() {
 
 	const meComponentFile = "$artifactId/src/app/features/main/me/me.component.html";
@@ -161,6 +278,13 @@ function setMeComponentHTMLFile() {
 
         <div class="col py-3">
             <h3>Me works</h3>
+            <p>
+                <a href="javascript:void(0);" (click)="showIdToken()">Id Token</a> |
+                <a href="javascript:void(0);" (click)="showMeEndpoint()">Me Endpoint</a>
+            </p>
+            <pre>
+{{ payload }}
+            </pre>
         </div>
     </div>
 </div>
