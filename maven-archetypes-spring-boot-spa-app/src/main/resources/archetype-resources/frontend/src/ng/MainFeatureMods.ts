@@ -247,7 +247,8 @@ function setMeComponentFile() {
                     this.payload = JSON.stringify(data, null, 4);
                   },
                   error: (error) => {
-                    console.log(error)
+                    console.log(error);
+                    this.payload = error.message;
                   }
                 });
            `);

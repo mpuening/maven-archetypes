@@ -4,6 +4,16 @@ azure:
   login-url: https://login.microsoftonline.com
   logout-url: https://login.windows.net/${azure.tenant}/oauth2/logout
 
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${azure.login-url}/${azure.tenant}/discovery/v2.0/keys
+          issuer-uri: ${azure.login-url}/${azure.tenant}/v2.0
+          audiences:
+            - ${azure.client-id}
+
 app:
   security:
     authority: ${azure.login-url}/${azure.tenant}

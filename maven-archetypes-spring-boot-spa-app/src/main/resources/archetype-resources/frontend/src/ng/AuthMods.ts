@@ -28,7 +28,7 @@ import {
   InteractionType
 } from '@azure/msal-browser';
 
-import { ServerResponseType} from '@azure/msal-common';
+//import { ServerResponseType} from '@azure/msal-common';
 
 import {
   MsalInterceptorConfiguration,
@@ -64,9 +64,9 @@ function msalConfig() {
       protocolMode: protocolMode,
       redirectUri: redirectUri,
       postLogoutRedirectUri: postLogoutRedirectUri,
-      OIDCOptions: {
-        serverResponseType: ServerResponseType.QUERY
-      }
+      //OIDCOptions: {
+      //  serverResponseType: ServerResponseType.QUERY
+      //}
     },
     cache: {
       cacheLocation: BrowserCacheLocation.LocalStorage,
@@ -115,6 +115,7 @@ export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   }
 
   const protectedResourceMap = new Map<string, Array<string> | null>([
+	["http://localhost:8080/api", scopes],
     ["https://localhost:8443/api", scopes]
     //["https://graph.microsoft.com/v1.0/me", ["user.read", "profile"]],
     //["https://myapplication.com/unprotected", null],
@@ -181,10 +182,11 @@ export class AuthService {
   }
 
   start() {
-	  this.msalService.handleRedirectObservable().subscribe();
+	this.msalService.handleRedirectObservable().subscribe();
 
     this.setIFrame();
-    this.setLoggedIn();
+    //this.setLoggedIn();
+    this.isLoggedIn = false;
     this.msalService.instance.enableAccountStorageEvents();
 
     this.msalBroadcastService.msalSubject$
@@ -195,11 +197,15 @@ export class AuthService {
         )
       )
       .subscribe((result: EventMessage) => {
-        if (this.msalService.instance.getAllAccounts().length === 0) {
-          window.location.pathname = '/';
-        } else {
-          this.setLoggedIn();
-        }
+		const payload : AuthenticationResult = result.payload as AuthenticationResult;
+		this.msalService.instance.setActiveAccount(payload.account);
+		this.isLoggedIn = true;
+		window.location.pathname = '/';
+        //if (this.msalService.instance.getAllAccounts().length === 0) {
+        //  window.location.pathname = '/';
+        //} else {
+        //  this.setLoggedIn();
+        //}
       });
 
     this.msalBroadcastService.inProgress$

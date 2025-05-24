@@ -60,7 +60,15 @@ spring:
                 - openid
                 - offline_access
                 - profile
-            require-authorization-consent: true
+                - Example.Read
+            require-authorization-consent: false
+
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://127.0.0.1:8443/oauth2/jwks
+          issuer-uri: https://127.0.0.1:8443
+          audiences:
+            - app-client
 
 #      client:
 #        provider:

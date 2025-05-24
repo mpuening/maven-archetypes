@@ -31,14 +31,15 @@ spring:
     console:
       enabled: true
 
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          #jwk-set-uri: ${azure.login-url}/${azure.tenant}/discovery/v2.0/keys
-          #issuer-uri: http://127.0.0.1:8080
-          jwk-set-uri: http://127.0.0.1:8080/oauth2/jwks
-          audiences: app-client
+# This config is defined in other profile yml files
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          jwk-set-uri: https://127.0.0.1:8443/oauth2/jwks
+#          issuer-uri: https://127.0.0.1:8443
+#          audiences:
+#            - app-client
 
 # For debugging purposes
 management:
