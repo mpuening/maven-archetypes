@@ -1,7 +1,5 @@
 package ${groupId}.config;
 
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -19,9 +17,9 @@ public class OAuth2ResourceConfiguration {
 
 	@Bean
 	@Order(4)
-	public SecurityFilterChain oauth2ResourceSecurityFilterChain(HttpSecurity http) throws Exception {
+	SecurityFilterChain oauth2ResourceSecurityFilterChain(HttpSecurity http) throws Exception {
 		return http
-				.securityMatchers(matchers -> matchers.requestMatchers(antMatcher("/api/**")))
+				.securityMatchers(matchers -> matchers.requestMatchers("/api/**"))
 				.oauth2ResourceServer(oauth2 ->
 						oauth2
 							.jwt(Customizer.withDefaults())
@@ -36,8 +34,8 @@ public class OAuth2ResourceConfiguration {
 				)
 				.authorizeHttpRequests(authorize ->
 						authorize
-							.requestMatchers(antMatcher("/api/config")).permitAll()
-							.requestMatchers(antMatcher("/api/me")).permitAll()
+							.requestMatchers("/api/config").permitAll()
+							.requestMatchers("/api/me").permitAll()
 							.anyRequest().authenticated()
 				)
 				.build();

@@ -16,7 +16,7 @@ server:
     key-store: classpath:selfsigned.p12
     key-store-password: storepass
     key-alias: selfsigned
-
+ 
 spring:
   ldap:
     embedded:
@@ -62,20 +62,11 @@ spring:
                 - profile
                 - Example.Read
             require-authorization-consent: false
-
-      resourceserver:
-        jwt:
-          jwk-set-uri: https://127.0.0.1:8443/oauth2/jwks
-          issuer-uri: https://127.0.0.1:8443
-          audiences:
-            - app-client
+            token:
+              access-token-time-to-live: 10m
 
 #      client:
 #        provider:
-#          azure:
-#            authorization-uri: ${azure.login-url}/${azure.tenant}/oauth2/v2.0/authorize
-#            token-uri: ${azure.login-url}/${azure.tenant}/oauth2/v2.0/token
-#            jwk-set-uri: ${azure.login-url}/${azure.tenant}/discovery/v2.0/keys
 #          spring:
 #            authorization-uri: https://127.0.0.1:8443/oauth2/authorize
 #            token-uri: https://127.0.0.1:8433/oauth2/token
@@ -92,9 +83,4 @@ spring:
 #            scope:
 #              - openid
 #              - profile
-#
-#azure:
-#  tenant: TENANT_ID_GOES_HERE
-#  login-url: https://login.microsoftonline.com
-#  logout-url: https://login.windows.net/${azure.tenant}/oauth2/logout
 #

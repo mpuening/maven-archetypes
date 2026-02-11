@@ -4,21 +4,6 @@ spring:
       - authserver
       - local
 
-#logging:
-#  level:
-#    org.springframework.security: trace
-
-springdoc:
-  swagger-ui:
-    operationsSorter: alpha
-
----
-spring:
-  config:
-    activate:
-      on-profile:
-        - local
-
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -31,15 +16,11 @@ spring:
     console:
       enabled: true
 
-# This config is defined in other profile yml files
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          jwk-set-uri: https://127.0.0.1:8443/oauth2/jwks
-#          issuer-uri: https://127.0.0.1:8443
-#          audiences:
-#            - app-client
+springdoc:
+  swagger-ui:
+    operationsSorter: alpha
+    oauth:
+      use-pkce-with-authorization-code-grant: true
 
 # For debugging purposes
 management:
@@ -48,22 +29,6 @@ management:
       exposure:
         include: "*"
 
-  
-# See https://127.0.0.1:8443/.well-known/openid-configuration
-app:
-  security:
-    authority: https://127.0.0.1:8443
-    knownAuthorities:
-      - https://127.0.0.1:8443
-    protocolMode: OIDC
-    clientId: app-client
-    scopes:
-      - openid
-    redirectUri: https://localhost:8443
-    postLogoutRedirectUri: https://127.0.0.1:8443/oauth2/logged-out
-  ldap:
-    url: ldap://localhost:8389/dc=example,dc=org
-  swagger:
-    oauth2:
-      authorization-uri: https://127.0.0.1:8443/oauth2/authorize
-      token-uri: https://127.0.0.1:8443/oauth2/token
+logging:
+  level:
+    '[org.springframework.security]': DEBUG

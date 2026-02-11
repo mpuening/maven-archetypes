@@ -1,0 +1,29 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://127.0.0.1:8443/oauth2/jwks
+          issuer-uri: https://127.0.0.1:8443
+          audiences:
+            - app-client
+
+app:
+  security:
+    authority: https://127.0.0.1:8443
+    knownAuthorities:
+      - https://127.0.0.1:8443/v2.0
+    protocolMode: OIDC
+    clientId: app-client
+    scopes:
+      - openid
+      - profile
+      - Example.Read
+    redirectUri: https://localhost:8443
+    postLogoutRedirectUri: https://127.0.0.1:8443/oauth2/logged-out
+  ldap:
+    url: ldap://localhost:8389/dc=example,dc=org
+  swagger:
+    oauth2:
+      authorization-uri: https://127.0.0.1:8443/oauth2/authorize
+      token-uri: https://127.0.0.1:8443/oauth2/token
