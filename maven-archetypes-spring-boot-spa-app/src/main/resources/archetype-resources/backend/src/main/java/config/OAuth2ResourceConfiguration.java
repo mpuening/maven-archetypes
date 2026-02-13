@@ -24,14 +24,15 @@ public class OAuth2ResourceConfiguration {
 						oauth2
 							.jwt(Customizer.withDefaults())
 							.authenticationEntryPoint((req, res, ex) -> {
-								// Handled via ErrorConfig and @RestControllerAdvice
+								// Handled via ErrorConfiguration and @RestControllerAdvice
 								throw ex;
 							})
 							.accessDeniedHandler((req, res, ex) -> {
-								// Handled via ErrorConfig and @RestControllerAdvice
+								// Handled via ErrorConfiguration and @RestControllerAdvice
 								throw ex;
 							})
 				)
+				.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(authorize ->
 						authorize
 							.requestMatchers("/api/config").permitAll()

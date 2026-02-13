@@ -19,7 +19,7 @@ app:
     authority: ${azure.login-url}/${azure.tenant}
     knownAuthorities:
       - ${azure.login-url}/${azure.tenant}
-    protocolMode: MSAL
+    protocolMode: AAD
     clientId: ${azure.client-id}
     scopes:
       - openid

@@ -61,17 +61,14 @@ function msalConfig() {
       clientId: clientId,
       authority: authority,
       knownAuthorities: knownAuthorities,
-      protocolMode: protocolMode,
       redirectUri: redirectUri,
       postLogoutRedirectUri: postLogoutRedirectUri,
-      //OIDCOptions: {
-      //  serverResponseType: ServerResponseType.QUERY
-      //}
     },
     cache: {
       cacheLocation: BrowserCacheLocation.LocalStorage,
     },
     system: {
+      protocolMode: protocolMode,
       loggerOptions: {
         loggerCallback(logLevel: LogLevel, message: string) {
           console.log(message);
@@ -124,7 +121,7 @@ export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   ]);
 
   return {
-    interactionType: InteractionType.Popup,
+    interactionType: InteractionType.Redirect,
     protectedResourceMap: protectedResourceMap
   };
 }
@@ -176,7 +173,7 @@ export class AuthService {
   constructor(
     @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     private msalService: MsalService,
-    private msalBroadcastService: MsalBroadcastService,
+    private msalBroadcastService: MsalBroadcastService
   ) {
     this.start();
   }
@@ -185,34 +182,21 @@ export class AuthService {
 	this.msalService.handleRedirectObservable().subscribe();
 
     this.setIFrame();
-    //this.setLoggedIn();
     this.isLoggedIn = false;
-    this.msalService.instance.enableAccountStorageEvents();
 
     this.msalBroadcastService.msalSubject$
       .pipe(
-        filter(
-          (msg: EventMessage) =>
-            msg.eventType === EventType.LOGIN_SUCCESS
-        )
+        filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS)
       )
       .subscribe((result: EventMessage) => {
 		const payload : AuthenticationResult = result.payload as AuthenticationResult;
 		this.msalService.instance.setActiveAccount(payload.account);
-		this.isLoggedIn = true;
-		window.location.pathname = '/';
-        //if (this.msalService.instance.getAllAccounts().length === 0) {
-        //  window.location.pathname = '/';
-        //} else {
-        //  this.setLoggedIn();
-        //}
+		this.setLoggedIn();
       });
 
     this.msalBroadcastService.inProgress$
       .pipe(
-        filter(
-          (status: InteractionStatus) => status === InteractionStatus.None
-        ),
+        filter((status: InteractionStatus) => status === InteractionStatus.None),
         takeUntil(this._destroying$)
       )
       .subscribe(() => {
@@ -387,8 +371,13 @@ function setLoginLogoutButtonComponent() {
 
 	const loginLogoutButtonComponentFile = "$artifactId/src/app/core/auth/login-logout-button.component.ts";
 	const loginLogoutButtonComponentContent = `
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
+
+import { MsalBroadcastService } from '@azure/msal-angular';
+import { InteractionStatus } from '@azure/msal-browser';
 
 import { AuthService } from './auth.service';
 
@@ -399,13 +388,33 @@ import { AuthService } from './auth.service';
   templateUrl: './login-logout-button.component.html',
   styleUrl: './login-logout-button.component.css'
 })
-export class LoginLogoutButtonComponent {
+export class LoginLogoutButtonComponent implements OnInit, OnDestroy {
 
-  constructor(private authService: AuthService) {
+  isLoggedIn = false;
+  private readonly destroying$ = new Subject<void>();
+
+  constructor(
+	private authService: AuthService,
+	private msalBroadcastService: MsalBroadcastService
+  ) {}
+
+  ngOnInit(): void {
+    this.msalBroadcastService.inProgress$
+      .pipe(
+        filter((status: InteractionStatus) => status === InteractionStatus.None),
+        takeUntil(this.destroying$)
+      )
+      .subscribe(() => {
+        this.isLoggedIn = this.authService.isLoggedIn;
+      });
+
+      // Set initial state
+      this.isLoggedIn = this.authService.isLoggedIn;
   }
 
-  isLoggedIn() {
-    return this.authService.isLoggedIn;
+  ngOnDestroy(): void {
+	this.destroying$.next(undefined);
+	this.destroying$.complete();
   }
 
   login() {
@@ -435,8 +444,8 @@ function setLoginLogoutButtonComponentHTMLFile() {
 	const loginLogoutButtonComponentFile = "$artifactId/src/app/core/auth/login-logout-button.component.html";
 	const loginLogoutButtonComponentContent = `
 <a href="https://127.0.0.1:8443/.well-known/openid-configuration">OpenId Config</a>
-<button *ngIf="!isLoggedIn()" (click)="login()">Login</button>
-<button *ngIf="isLoggedIn()" (click)="logout()">Logout</button>
+<button *ngIf="!isLoggedIn" (click)="login()">Login</button>
+<button *ngIf="isLoggedIn" (click)="logout()">Logout</button>
 `;
 
 	console.log("Updating " + loginLogoutButtonComponentFile);
