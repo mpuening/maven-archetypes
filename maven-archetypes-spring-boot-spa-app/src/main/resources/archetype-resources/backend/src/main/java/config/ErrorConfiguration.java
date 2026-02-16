@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.BeanFactoryUtils;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.boot.security.autoconfigure.web.servlet.SecurityFilterProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -39,7 +39,7 @@ public class ErrorConfiguration {
 		FilterRegistrationBean<ExceptionHandlingFilter> filterRegistrationBean = new FilterRegistrationBean<>(
 				new ExceptionHandlingFilter(handlerExceptionResolver, findHandlerMappings(applicationContext)));
 		filterRegistrationBean.setUrlPatterns(List.of("/api/*"));
-		filterRegistrationBean.setOrder(SecurityProperties.DEFAULT_FILTER_ORDER - 200);
+		filterRegistrationBean.setOrder(SecurityFilterProperties.DEFAULT_FILTER_ORDER - 200);
 		return filterRegistrationBean;
 	}
 

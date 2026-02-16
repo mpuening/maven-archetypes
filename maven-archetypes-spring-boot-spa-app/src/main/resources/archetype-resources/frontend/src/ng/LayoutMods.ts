@@ -21,7 +21,7 @@ setMainAppWithLayoutElements();
 // Import RouterLink to Header Component
 //
 function importRouterLinkAndLoginButtonIntoHeader() {
-	const headerComponentFile = "$artifactId/src/app/core/layout/header/header.component.ts";
+	const headerComponentFile = "$artifactId/src/app/core/layout/header/header.ts";
 	console.log("Updating (1) " + headerComponentFile);
 
 	const project = new Project({
@@ -31,7 +31,7 @@ function importRouterLinkAndLoginButtonIntoHeader() {
 
 	project.addSourceFilesAtPaths(headerComponentFile);
 	project.getSourceFiles().forEach((sourceFile) => {
-		const HeaderComponent = sourceFile.getClass('HeaderComponent');
+		const HeaderComponent = sourceFile.getClass('Header');
 		if (HeaderComponent != null) {
 			//
 			// Add import statements
@@ -41,8 +41,8 @@ function importRouterLinkAndLoginButtonIntoHeader() {
 				moduleSpecifier: '@angular/router'
 			});
 			sourceFile.addImportDeclaration({
-				namedImports: ['LoginLogoutButtonComponent'],
-				moduleSpecifier: './../../auth/login-logout-button.component'
+				namedImports: ['LoginLogoutButton'],
+				moduleSpecifier: './../../auth/login-logout-button'
 			});
 
 			//
@@ -63,7 +63,7 @@ function importRouterLinkAndLoginButtonIntoHeader() {
 										?.addElement('RouterLink');
 									entry
 										.getFirstChildByKind(SyntaxKind.ArrayLiteralExpression)
-										?.addElement('LoginLogoutButtonComponent');
+										?.addElement('LoginLogoutButton');
 								}
 							});
 						}
@@ -81,7 +81,7 @@ function importRouterLinkAndLoginButtonIntoHeader() {
 // Import Header and Footer in App Component File
 //
 function importHeaderAndFooterInAppComponentFile() {
-	const appComponentFile = "$artifactId/src/app/app.component.ts";
+	const appComponentFile = "$artifactId/src/app/app.ts";
 	console.log("Updating " + appComponentFile);
 
 	const project = new Project({
@@ -92,18 +92,18 @@ function importHeaderAndFooterInAppComponentFile() {
 	project.addSourceFilesAtPaths(appComponentFile);
 	project.getSourceFiles().forEach((sourceFile) => {
 
-		const AppComponent = sourceFile.getClass('AppComponent');
+		const AppComponent = sourceFile.getClass('App');
 		if (AppComponent != null) {
 			//
 			// Add import statements
 			//
 			sourceFile.addImportDeclaration({
-				namedImports: ['HeaderComponent'],
-				moduleSpecifier: './core/layout/header/header.component'
+				namedImports: ['Header'],
+				moduleSpecifier: './core/layout/header/header'
 			});
 			sourceFile.addImportDeclaration({
-				namedImports: ['FooterComponent'],
-				moduleSpecifier: './core/layout/footer/footer.component'
+				namedImports: ['Footer'],
+				moduleSpecifier: './core/layout/footer/footer'
 			});
 
 			//
@@ -121,10 +121,10 @@ function importHeaderAndFooterInAppComponentFile() {
 								if (entry.getText().includes("imports")) {
 									entry
 										.getFirstChildByKind(SyntaxKind.ArrayLiteralExpression)
-										?.addElement('HeaderComponent');
+										?.addElement('Header');
 									entry
 										.getFirstChildByKind(SyntaxKind.ArrayLiteralExpression)
-										?.addElement('FooterComponent');
+										?.addElement('Footer');
 								}
 							});
 						}
@@ -147,7 +147,7 @@ function importHeaderAndFooterInAppComponentFile() {
 // However, this approach didn't work since the footer element is
 // too deeply nested fot the CSS to match. Instead use other simple CSS
 function setBodyClassesInAppComponentFile() {
-	const appComponentFile = "$artifactId/src/app/app.component.ts";
+	const appComponentFile = "$artifactId/src/app/app.ts";
 	console.log("Updating " + appComponentFile);
 
 	const project = new Project({
@@ -158,7 +158,7 @@ function setBodyClassesInAppComponentFile() {
 	project.addSourceFilesAtPaths(appComponentFile);
 	project.getSourceFiles().forEach((sourceFile) => {
 
-		const AppComponent = sourceFile.getClass('AppComponent');
+		const AppComponent = sourceFile.getClass('App');
 		if (AppComponent != null) {
 			//
 			// Add C'tor to set document.body classes
@@ -203,7 +203,7 @@ function setBodyClassesInAppComponentFile() {
 //
 function setHeaderComponentHTMLFile() {
 
-	const headerComponentFile = "$artifactId/src/app/core/layout/header/header.component.html";
+	const headerComponentFile = "$artifactId/src/app/core/layout/header/header.html";
 	const headerComponentContent = `
 <header>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark">
@@ -239,7 +239,7 @@ function setHeaderComponentHTMLFile() {
 // Content for the Footer Component
 //
 function setFooterComponentHTMLFile() {
-	const footerComponentFile = "$artifactId/src/app/core/layout/footer/footer.component.html";
+	const footerComponentFile = "$artifactId/src/app/core/layout/footer/footer.html";
 	const footerComponentContent = `
 <p>&nbsp;</p>
 <footer class="footer mt-auto bg-body-tertiary">
@@ -258,7 +258,7 @@ function setFooterComponentHTMLFile() {
 // Content for the Footer Component
 //
 function setFooterComponentCSSFile() {
-	const footerCSSFile = "$artifactId/src/app/core/layout/footer/footer.component.css";
+	const footerCSSFile = "$artifactId/src/app/core/layout/footer/footer.css";
 	const footerCSSContent = `
 footer {
   position:fixed;
@@ -275,7 +275,7 @@ footer {
 // Main Page
 //
 function setMainAppWithLayoutElements() {
-	const appPageFile = "$artifactId/src/app/app.component.html";
+	const appPageFile = "$artifactId/src/app/app.html";
 	const appPageContent = `
 <app-layout-header></app-layout-header>
 <main>

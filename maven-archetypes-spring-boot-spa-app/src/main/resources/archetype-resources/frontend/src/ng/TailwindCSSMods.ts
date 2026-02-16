@@ -73,7 +73,7 @@ function updateTailwindCSSToStylesCSSFile() {
 // Test page to see if config is working
 //
 function setMainAppWithTestPage() {
-	const appPageFile = "$artifactId/src/app/app.component.html";
+	const appPageFile = "$artifactId/src/app/app.html";
 	const appPageContent = `
 <h1 class="text-3xl font-bold underline">
   Hello world!

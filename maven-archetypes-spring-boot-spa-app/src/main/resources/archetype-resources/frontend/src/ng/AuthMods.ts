@@ -369,7 +369,7 @@ function importAuthConfigIntoAppConfig() {
 //
 function setLoginLogoutButtonComponent() {
 
-	const loginLogoutButtonComponentFile = "$artifactId/src/app/core/auth/login-logout-button.component.ts";
+	const loginLogoutButtonComponentFile = "$artifactId/src/app/core/auth/login-logout-button.ts";
 	const loginLogoutButtonComponentContent = `
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -385,10 +385,10 @@ import { AuthService } from './auth.service';
   selector: 'app-login-logout-button',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './login-logout-button.component.html',
-  styleUrl: './login-logout-button.component.css'
+  templateUrl: './login-logout-button.html',
+  styleUrl: './login-logout-button.css'
 })
-export class LoginLogoutButtonComponent implements OnInit, OnDestroy {
+export class LoginLogoutButton implements OnInit, OnDestroy {
 
   isLoggedIn = false;
   private readonly destroying$ = new Subject<void>();
@@ -441,7 +441,7 @@ export class LoginLogoutButtonComponent implements OnInit, OnDestroy {
 //
 function setLoginLogoutButtonComponentHTMLFile() {
 
-	const loginLogoutButtonComponentFile = "$artifactId/src/app/core/auth/login-logout-button.component.html";
+	const loginLogoutButtonComponentFile = "$artifactId/src/app/core/auth/login-logout-button.html";
 	const loginLogoutButtonComponentContent = `
 <a href="https://127.0.0.1:8443/.well-known/openid-configuration">OpenId Config</a>
 <button *ngIf="!isLoggedIn" (click)="login()">Login</button>

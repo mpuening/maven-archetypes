@@ -20,21 +20,21 @@ function importFeaturesInAppRoutingFile() {
 	project.getSourceFiles().forEach((sourceFile) => {
 
 		sourceFile.addImportDeclaration({
-			namedImports: ['MeComponent'],
-			moduleSpecifier: './features/main/me/me.component'
+			namedImports: ['Me'],
+			moduleSpecifier: './features/main/me/me'
 		});
 		sourceFile.addImportDeclaration({
-			namedImports: ['HelpComponent'],
-			moduleSpecifier: './features/main/help/help.component'
+			namedImports: ['Help'],
+			moduleSpecifier: './features/main/help/help'
 		});
 
 		sourceFile.addImportDeclaration({
-			namedImports: ['EventsComponent'],
-			moduleSpecifier: './features/admin/events/events.component'
+			namedImports: ['Events'],
+			moduleSpecifier: './features/admin/events/events'
 		});
 		sourceFile.addImportDeclaration({
-			namedImports: ['SupportComponent'],
-			moduleSpecifier: './features/admin/support/support.component'
+			namedImports: ['Support'],
+			moduleSpecifier: './features/admin/support/support'
 		});
 		
 		const routes = sourceFile.getVariableDeclarationOrThrow("routes");
@@ -59,20 +59,20 @@ function importFeaturesInAppRoutingFile() {
 			path: 'main', 
 			children:  [{
 				path: 'me', 
-				component: MeComponent
+				component: Me
 			}, {
 				path: 'help', 
-				component: HelpComponent
+				component: Help
 			}]
 			}`);
 		array.addElement(`{
 			path: 'admin', 
 			children:  [{
 				path: 'events', 
-				component: EventsComponent
+				component: Events
 			}, {
 				path: 'support', 
-				component: SupportComponent
+				component: Support
 			}]
 			}`);
 

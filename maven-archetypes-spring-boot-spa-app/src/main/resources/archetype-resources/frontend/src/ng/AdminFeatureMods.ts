@@ -15,7 +15,7 @@ setSupportComponentHTMLFile();
 // Import RouterLink to SideMenu Component
 //
 function importRouterLinkIntoSideMenu() {
-	const sidemenuComponentFile = "$artifactId/src/app/features/admin/sidemenu/sidemenu.component.ts";
+	const sidemenuComponentFile = "$artifactId/src/app/features/admin/sidemenu/sidemenu.ts";
 	console.log("Updating " + sidemenuComponentFile);
 
 	const project = new Project({
@@ -25,7 +25,7 @@ function importRouterLinkIntoSideMenu() {
 
 	project.addSourceFilesAtPaths(sidemenuComponentFile);
 	project.getSourceFiles().forEach((sourceFile) => {
-		const SideMenuComponent = sourceFile.getClass('SidemenuComponent');
+		const SideMenuComponent = sourceFile.getClass('Sidemenu');
 		if (SideMenuComponent != null) {
 			//
 			// Add import statements
@@ -69,7 +69,7 @@ function importRouterLinkIntoSideMenu() {
 //
 function setSideMenuComponentHTMLFile() {
 
-	const sidemenuComponentFile = "$artifactId/src/app/features/admin/sidemenu/sidemenu.component.html";
+	const sidemenuComponentFile = "$artifactId/src/app/features/admin/sidemenu/sidemenu.html";
 	const sidemenuComponentContent = `
 <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
@@ -92,8 +92,8 @@ function setSideMenuComponentHTMLFile() {
 // Import SideMenu to Admin Components
 //
 function importSideMenuIntoAdminFeatures() {
-	const eventsComponentFile = "$artifactId/src/app/features/admin/events/events.component.ts";
-	const supportComponentFile = "$artifactId/src/app/features/admin/support/support.component.ts";
+	const eventsComponentFile = "$artifactId/src/app/features/admin/events/events.ts";
+	const supportComponentFile = "$artifactId/src/app/features/admin/support/support.ts";
 	console.log("Updating Admin Features");
 
 	const project = new Project({
@@ -103,9 +103,9 @@ function importSideMenuIntoAdminFeatures() {
 
 	project.addSourceFilesAtPaths([ eventsComponentFile, supportComponentFile ]);
 	project.getSourceFiles().forEach((sourceFile) => {
-		let AdminComponent = sourceFile.getClass('EventsComponent');
+		let AdminComponent = sourceFile.getClass('Events');
 		if (AdminComponent == null) {
-			AdminComponent = sourceFile.getClass('SupportComponent');
+			AdminComponent = sourceFile.getClass('Support');
 		}
 
 		if (AdminComponent != null) {
@@ -113,8 +113,8 @@ function importSideMenuIntoAdminFeatures() {
 			// Add import statements
 			//
 			sourceFile.addImportDeclaration({
-				namedImports: ['SidemenuComponent'],
-				moduleSpecifier: '../sidemenu/sidemenu.component'
+				namedImports: ['Sidemenu'],
+				moduleSpecifier: '../sidemenu/sidemenu'
 			});
 
 			//
@@ -132,7 +132,7 @@ function importSideMenuIntoAdminFeatures() {
 								if (entry.getText().includes("imports")) {
 									entry
 										.getFirstChildByKind(SyntaxKind.ArrayLiteralExpression)
-										?.addElement('SidemenuComponent');
+										?.addElement('Sidemenu');
 								}
 							});
 						}
@@ -151,7 +151,7 @@ function importSideMenuIntoAdminFeatures() {
 //
 function setEventsComponentHTMLFile() {
 
-	const eventsComponentFile = "$artifactId/src/app/features/admin/events/events.component.html";
+	const eventsComponentFile = "$artifactId/src/app/features/admin/events/events.html";
 	const eventsComponentContent = `
 <div class="container-fluid">
     <div class="row flex-nowrap">
@@ -176,7 +176,7 @@ function setEventsComponentHTMLFile() {
 //
 function setSupportComponentHTMLFile() {
 
-	const supportComponentFile = "$artifactId/src/app/features/admin/support/support.component.html";
+	const supportComponentFile = "$artifactId/src/app/features/admin/support/support.html";
 	const supportComponentContent = `
 <div class="container-fluid">
     <div class="row flex-nowrap">

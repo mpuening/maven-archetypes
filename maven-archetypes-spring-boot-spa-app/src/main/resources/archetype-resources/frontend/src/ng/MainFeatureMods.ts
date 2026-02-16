@@ -18,7 +18,7 @@ setHelpComponentHTMLFile();
 // Import RouterLink to SideMenu Component
 //
 function importRouterLinkIntoSideMenu() {
-	const sidemenuComponentFile = "$artifactId/src/app/features/main/sidemenu/sidemenu.component.ts";
+	const sidemenuComponentFile = "$artifactId/src/app/features/main/sidemenu/sidemenu.ts";
 	console.log("Updating " + sidemenuComponentFile);
 
 	const project = new Project({
@@ -28,7 +28,7 @@ function importRouterLinkIntoSideMenu() {
 
 	project.addSourceFilesAtPaths(sidemenuComponentFile);
 	project.getSourceFiles().forEach((sourceFile) => {
-		const SideMenuComponent = sourceFile.getClass('SidemenuComponent');
+		const SideMenuComponent = sourceFile.getClass('Sidemenu');
 		if (SideMenuComponent != null) {
 			//
 			// Add import statements
@@ -72,7 +72,7 @@ function importRouterLinkIntoSideMenu() {
 //
 function setSideMenuComponentHTMLFile() {
 
-	const sidemenuComponentFile = "$artifactId/src/app/features/main/sidemenu/sidemenu.component.html";
+	const sidemenuComponentFile = "$artifactId/src/app/features/main/sidemenu/sidemenu.html";
 	const sidemenuComponentContent = `
 <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
@@ -95,8 +95,8 @@ function setSideMenuComponentHTMLFile() {
 // Import SideMenu to Main Components
 //
 function importSideMenuIntoMainFeatures() {
-	const meComponentFile = "$artifactId/src/app/features/main/me/me.component.ts";
-	const helpComponentFile = "$artifactId/src/app/features/main/help/help.component.ts";
+	const meComponentFile = "$artifactId/src/app/features/main/me/me.ts";
+	const helpComponentFile = "$artifactId/src/app/features/main/help/help.ts";
 	console.log("Updating Main Features");
 
 	const project = new Project({
@@ -106,9 +106,9 @@ function importSideMenuIntoMainFeatures() {
 
 	project.addSourceFilesAtPaths([ meComponentFile, helpComponentFile ]);
 	project.getSourceFiles().forEach((sourceFile) => {
-		let MainComponent = sourceFile.getClass('MeComponent');
+		let MainComponent = sourceFile.getClass('Me');
 		if (MainComponent == null) {
-			MainComponent = sourceFile.getClass('HelpComponent');
+			MainComponent = sourceFile.getClass('Help');
 		}
 
 		if (MainComponent != null) {
@@ -116,8 +116,8 @@ function importSideMenuIntoMainFeatures() {
 			// Add import statements
 			//
 			sourceFile.addImportDeclaration({
-				namedImports: ['SidemenuComponent'],
-				moduleSpecifier: '../sidemenu/sidemenu.component'
+				namedImports: ['Sidemenu'],
+				moduleSpecifier: '../sidemenu/sidemenu'
 			});
 
 			//
@@ -135,7 +135,7 @@ function importSideMenuIntoMainFeatures() {
 								if (entry.getText().includes("imports")) {
 									entry
 										.getFirstChildByKind(SyntaxKind.ArrayLiteralExpression)
-										?.addElement('SidemenuComponent');
+										?.addElement('Sidemenu');
 								}
 							});
 						}
@@ -156,7 +156,7 @@ function importSideMenuIntoMainFeatures() {
 // TODO: Instead of just replacing, should I add functions?
 function setMeComponentFile() {
 
-	const meComponentFile = "$artifactId/src/app/features/main/me/me.component.ts";
+	const meComponentFile = "$artifactId/src/app/features/main/me/me.ts";
 
 	console.log("Updating " + meComponentFile);
 
@@ -167,7 +167,7 @@ function setMeComponentFile() {
 
 	project.addSourceFilesAtPaths([ meComponentFile ]);
 	project.getSourceFiles().forEach((sourceFile) => {
-		let MeComponent = sourceFile.getClass('MeComponent');
+		let MeComponent = sourceFile.getClass('Me');
 
 		if (MeComponent != null) {
 			//
@@ -269,7 +269,7 @@ function setMeComponentFile() {
 
 function setMeComponentHTMLFile() {
 
-	const meComponentFile = "$artifactId/src/app/features/main/me/me.component.html";
+	const meComponentFile = "$artifactId/src/app/features/main/me/me.html";
 	const meComponentContent = `
 <div class="container-fluid">
     <div class="row flex-nowrap">
@@ -301,7 +301,7 @@ function setMeComponentHTMLFile() {
 //
 function setHelpComponentHTMLFile() {
 
-	const helpComponentFile = "$artifactId/src/app/features/main/help/help.component.html";
+	const helpComponentFile = "$artifactId/src/app/features/main/help/help.html";
 	const helpComponentContent = `
 <div class="container-fluid">
     <div class="row flex-nowrap">

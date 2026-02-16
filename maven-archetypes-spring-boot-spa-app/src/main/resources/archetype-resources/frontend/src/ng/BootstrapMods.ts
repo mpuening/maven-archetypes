@@ -22,8 +22,10 @@ function updateAngularJSONFileToBundleBootstrap() {
 	styles.push("bootstrap/dist/css/bootstrap.min.css");
 	styles.push("bootstrap-icons/font/bootstrap-icons.min.css");
 
-	const scripts = project.architect.build.options.scripts;
+	// project.architect.build.options.scripts is no longer present
+	const scripts = [];
 	scripts.push("node_modules/bootstrap/dist/js/bootstrap.min.js");
+	project.architect.build.options.scripts = scripts;
 
 	fs.writeFileSync(angularJSONFile, JSON.stringify(angular, null, 2));
 }
@@ -33,7 +35,7 @@ function updateAngularJSONFileToBundleBootstrap() {
 // Test page to see if config is working
 //
 function setMainAppWithTestPage() {
-	const appPageFile = "$artifactId/src/app/app.component.html";
+	const appPageFile = "$artifactId/src/app/app.html";
 	const appPageContent = `
 <h3>Spring Boot Angular App</h3>
 <div class="input-group w-50">
